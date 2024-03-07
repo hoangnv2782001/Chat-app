@@ -17,13 +17,13 @@ import {
 } from "@mui/material";
 import { CaretLeft, ClosedCaptioning } from "phosphor-react";
 import React, { useRef, useState } from "react";
-import ProfileForm from "../../sections/settings/ProfileForm";
+
 import CloseIcon from "@mui/icons-material/Close";
 import { useSelector } from "react-redux";
 
 import img from "../../assets/Images/cover.png";
 import CameraAltOutlinedIcon from "@mui/icons-material/CameraAltOutlined";
-import BorderColorOutlinedIcon from "@mui/icons-material/BorderColorOutlined";
+
 import { fDate } from "../../utils/formatTime";
 import { useApp } from "../../hooks/useApp";
 import { uploadAvatarApi } from "../../service/FileService";

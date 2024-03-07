@@ -24,7 +24,7 @@ import {
   updateConversationThunk,
 } from "../../Redux/slices/conversation";
 import { useConversations } from "../../hooks/useConversations";
-import { useConversation } from "../../hooks/useConversation";
+import { useFriend } from "../../hooks/useFriend";
 
 // const isAuthendicated = f;/
 /**
@@ -34,30 +34,32 @@ import { useConversation } from "../../hooks/useConversation";
 const DashboardLayout = () => {
   const { isLoggedIn, token } = useSelector((state) => state.auth);
 
-  const { conversations,current_conversation } = useSelector((state) => state.conversation);
+  const { conversations, current_conversation } = useSelector(
+    (state) => state.conversation
+  );
 
-  const {  getConversations} =
-    useConversations();
+  const { getConversations } = useConversations();
 
-  
-  console.log("reder conversation when dispatch action",conversations)
+  const { getFriends, getFriendRequests } = useFriend();
 
-
+  console.log("reder conversation when dispatch action", conversations);
 
   const isDesktop = useResponsive("up", "md");
   const dispatch = useDispatch();
-
-
-
 
   const handleReceiveMessage = (message) => {
     console.log(`du lieu nhan ${message.body}`);
 
     const data = JSON.parse(message.body);
 
-    console.log("add messs", data?.sender?.id, current_conversation,conversations);
-    dispatch(addMessagesThunk(data))
-    dispatch(updateConversationThunk(data))
+    console.log(
+      "add messs",
+      data?.sender?.id,
+      current_conversation,
+      conversations
+    );
+    dispatch(addMessagesThunk(data));
+    dispatch(updateConversationThunk(data));
   };
 
   const handleCloseSocket = function (event) {
@@ -67,27 +69,22 @@ const DashboardLayout = () => {
     }
   };
 
-
-
   // handle socket connet
   useEffect(() => {
     if (isLoggedIn) {
       console.log("conversation render ", conversations);
-     
 
       const onConnect = function (frame) {
         console.log("Connect is successfully!");
 
         socket.subscribe("/user/queue/message", handleReceiveMessage);
 
-
         socket.subscribe("/user/queue/conversation/delete", (message) => {
           console.log(`du lieu nhan delete conversation ${message.body}`);
 
-          const data = JSON.parse(message.body)
-          
-          dispatch(removeConversationThunk(data.data))
+          const data = JSON.parse(message.body);
 
+          dispatch(removeConversationThunk(data.data));
         });
       };
       if (!socket) {
@@ -95,25 +92,23 @@ const DashboardLayout = () => {
       }
 
       // window.addEventListener("beforeunload", handleCloseSocket);
-
-    
-   
     }
-      // cleanup code that disconnects from that system.
-      return () => {
-        // socket.deactivate()
-        // window.removeEventListener("beforeunload", handleCloseSocket);
-        console.log("unmount");
-      };
+    // cleanup code that disconnects from that system.
+    return () => {
+      // socket.deactivate()
+      // window.removeEventListener("beforeunload", handleCloseSocket);
+      console.log("unmount");
+    };
   }, [isLoggedIn]);
 
   useEffect(() => {
-   
     getConversations();
 
     dispatch(FetchUserProfile());
     dispatch(setCurrentConversation(null));
-    dispatch(fetchCurrentMessages({messages : []}));
+    dispatch(fetchCurrentMessages({ messages: [] }));
+    getFriendRequests();
+    getFriends();
 
     dispatch(SelectConversation({ chatType: null }));
   }, [isLoggedIn]);
