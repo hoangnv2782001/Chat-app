@@ -1,14 +1,11 @@
-import { useDispatch, useSelector } from "react-redux";
-import { getConversationsApi, startConversationApi } from "../service/ConversationsService";
-import conversation, {
-  addConversation,
+import { useDispatch } from "react-redux";
+import { getConversationsApi } from "../service/ConversationsService";
+import  {
+
   fetchConversations,
-  setCurrentConversation,
-  updateConversation,
-  updateConversationThunk,
+ 
 } from "../Redux/slices/conversation";
-import { SelectConversation, selectConversation } from "../Redux/slices/app";
-import { useEffect, useRef } from "react";
+
 import { useApp } from "./useApp";
 
 export const useConversations = () => {

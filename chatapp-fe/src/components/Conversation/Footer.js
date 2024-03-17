@@ -47,11 +47,12 @@ const Footer = () => {
   const dispatch = useDispatch();
 
   // const { current_conversation } = useSelector((state) => state.conversation);
-  const {conversations,current_conversation} = useSelector(state=>state.conversation)
+  const {chatType,current_conversation} = useSelector(state=>state.conversation)
+
+
   const { sendMessage ,sendFile} = useConversation();
 
-  const isMobile = useResponsive("between", "md", "xs", "sm");
-
+ 
   const { sidebar, user } = useSelector((state) => state.app);
 
   const [openPicker, setOpenPicker] = React.useState(false);
@@ -87,12 +88,12 @@ const Footer = () => {
       content: linkify(value),
       conversation: current_conversation.id,
       sender: user,
-      receiver: current_conversation.user.id,
+      receiver:chatType ==='private' ? current_conversation.user.id : current_conversation?.id,
       time: new Date().toISOString(),
       type: containsUrl(value) ? "LINK" : "TEXT",
     };
 
-    sendMessage(message,conversations,current_conversation);
+    sendMessage(message,chatType,current_conversation);
 
     setValue("");
   };
@@ -110,12 +111,12 @@ const Footer = () => {
         content: '',
         conversation: current_conversation.id,
         sender: user,
-        receiver: current_conversation.user.id,
+        receiver: chatType ==='private' ? current_conversation.user.id : current_conversation?.id,
         time: new Date().toISOString(),
         type: type,
       };
 
-      sendFile(event.target.files[0],message)
+      sendFile(event.target.files[0],message,chatType)
     }
   };
 
@@ -135,7 +136,7 @@ const Footer = () => {
       }}
     >
       <Box
-        p={isMobile ? 1 : 2}
+        p={1}
         width={"100%"}
         sx={{
           backgroundColor:
@@ -145,7 +146,7 @@ const Footer = () => {
           boxShadow: "0px 0px 2px rgba(0, 0, 0, 0.25)",
         }}
       >
-        <Stack direction="row" alignItems={"center"} spacing={isMobile ? 1 : 3}>
+        <Stack direction="row" alignItems={"center"} spacing={2}>
           <Stack sx={{ width: "100%" }}>
             <Box
               style={{
@@ -153,7 +154,7 @@ const Footer = () => {
                 position: "fixed",
                 display: openPicker ? "inline" : "none",
                 bottom: 81,
-                right: isMobile ? 20 : sidebar.open ? 420 : 100,
+                right: sidebar.open ? 420 : 100,
               }}
             >
               <Picker

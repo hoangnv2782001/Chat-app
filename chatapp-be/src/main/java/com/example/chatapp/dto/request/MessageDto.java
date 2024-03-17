@@ -22,7 +22,7 @@ public class MessageDto {
 
     private UserResponse sender;
 
-    private int receiver;
+    private Object receiver;
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime time;

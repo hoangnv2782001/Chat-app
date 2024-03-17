@@ -2,29 +2,25 @@ import React, { useEffect, useRef } from "react";
 
 import SideBar from "./SideBar";
 import { Stack } from "@mui/material";
-import { Navigate, Outlet } from "react-router-dom";
+import {  Outlet } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { connectSocket, socket } from "../../Stomp";
 import {
   FetchUserProfile,
-  SelectConversation,
-  ShowSnackbar,
+
 } from "../../Redux/slices/app";
 import useResponsive from "../../hooks/useResponsive";
 import {
-  UpdateConversation,
-  AddConversation,
-  AddMessage,
-  FetchConversations,
-  updateConversation,
-  setCurrentConversation,
-  fetchCurrentMessages,
+
+
   addMessagesThunk,
   removeConversationThunk,
   updateConversationThunk,
+
 } from "../../Redux/slices/conversation";
 import { useConversations } from "../../hooks/useConversations";
 import { useFriend } from "../../hooks/useFriend";
+import useGroup from "../../hooks/useGroup";
 
 // const isAuthendicated = f;/
 /**
@@ -33,10 +29,11 @@ import { useFriend } from "../../hooks/useFriend";
  */
 const DashboardLayout = () => {
   const { isLoggedIn, token } = useSelector((state) => state.auth);
-
-  const { conversations, current_conversation } = useSelector(
+  const {getGroups} = useGroup()
+  const { conversations,current_conversation } = useSelector(
     (state) => state.conversation
   );
+
 
   const { getConversations } = useConversations();
 
@@ -103,20 +100,12 @@ const DashboardLayout = () => {
 
   useEffect(() => {
     getConversations();
-
     dispatch(FetchUserProfile());
-    dispatch(setCurrentConversation(null));
-    dispatch(fetchCurrentMessages({ messages: [] }));
     getFriendRequests();
     getFriends();
-
-    dispatch(SelectConversation({ chatType: null }));
+    getGroups()
+   
   }, [isLoggedIn]);
-
-  // // chuyern ve trang login nếu chưa xác thực
-  // if (!isLoggedIn) {
-  //   return <Navigate to="/auth/login" replace={true} />;
-  // }
 
   // jsx render ra component navbar
   return (
@@ -132,24 +121,7 @@ const DashboardLayout = () => {
 
         <Outlet />
       </Stack>
-      {/* {open_audio_notification_dialog && (
-        <AudioCallNotification open={open_audio_notification_dialog} />
-      )}
-      {open_audio_dialog && (
-        <AudioCallDialog
-          open={open_audio_dialog}
-          handleClose={handleCloseAudioDialog}
-        />
-      )}
-      {open_video_notification_dialog && (
-        <VideoCallNotification open={open_video_notification_dialog} />
-      )}
-      {open_video_dialog && (
-        <VideoCallDialog
-          open={open_video_dialog}
-          handleClose={handleCloseVideoDialog}
-        />
-      )} */}
+    
     </>
   );
 };

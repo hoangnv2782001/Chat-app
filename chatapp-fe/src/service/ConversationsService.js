@@ -16,6 +16,6 @@ export const getConversationsApi = async () => {
   return await axios.get(`/conversations`);
 };
 
-export const getMessagesConversation = async (id) => {
-  return await axios.get(`/messages/${id}`);
+export const getMessagesConversation = async (type,id) => {
+  return await axios.get(`/messages/${type}/${id}`);
 };

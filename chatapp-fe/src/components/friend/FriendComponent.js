@@ -16,8 +16,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useConversation } from "../../hooks/useConversation";
 const FriendComponent = ({ name, id, online, img, ...other }) => {
   const theme = useTheme();
-  const dispatch = useDispatch();
-const {conversations,current_conversation} = useSelector(state=>state.conversation)
+ 
   const {startConversation} = useConversation();
   return (
     <StyleChatBox
@@ -65,7 +64,7 @@ const {conversations,current_conversation} = useSelector(state=>state.conversati
               // dispatch(AddDirectConversation())
               other.handleClose();
 
-              // dispatch(SelectConversation({ chatType:"individual" }));
+              // dispatch(SelectConversation({ chatType:"private" }));
 
               // dispatch(
               //   CreateCurrentConversation({

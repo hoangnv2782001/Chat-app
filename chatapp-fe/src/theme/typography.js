@@ -38,13 +38,13 @@ const typography = {
     ...responsiveFontSizes({ sm: 20, md: 24, lg: 24 }),
   },
   h5: {
-    fontWeight: 700,
+    fontWeight: 500,
     lineHeight: 1.5,
     fontSize: pxToRem(18),
     ...responsiveFontSizes({ sm: 19, md: 20, lg: 20 }),
   },
   h6: {
-    fontWeight: 700,
+    fontWeight: 500,
     lineHeight: 28 / 18,
     fontSize: pxToRem(17),
     ...responsiveFontSizes({ sm: 18, md: 18, lg: 18 }),
@@ -66,27 +66,27 @@ const typography = {
   body2: {
     lineHeight: 22 / 14,
     fontSize: pxToRem(14),
-    fontWeight: 600,
+    fontWeight: 400,
   },
   caption: {
     lineHeight: 1.5,
     fontSize: pxToRem(12),
-    fontWeight: 600,
+    fontWeight: 400,
   },
   overline: {
-    fontWeight: 700,
+    fontWeight: 500,
     lineHeight: 1.5,
     fontSize: pxToRem(12),
     textTransform: 'uppercase',
   },
   button: {
-    fontWeight: 700,
+    fontWeight: 600,
     lineHeight: 24 / 14,
     fontSize: pxToRem(14),
     textTransform: 'capitalize',
   },
   article: {
-    fontWeight: 700,
+    fontWeight: 600,
   }
 };
 

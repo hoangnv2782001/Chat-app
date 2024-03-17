@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import com.example.chatapp.model.Message;
 
 @Repository
-public interface MessageRepository extends JpaRepository<Message, String>{
+public interface MessageRepository{
 	
 	List<Message> findByConversationId(String id,Sort sort);
 

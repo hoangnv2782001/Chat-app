@@ -8,8 +8,12 @@ import com.example.chatapp.model.Message;
 
 public interface MessageService {
 	
-	Message saveMessage(MessageDto messageDto);
+	Message savePrivateMessage(MessageDto messageDto);
+	
+	Message saveGroupMessage(MessageDto messageDto);
 	
 	List<MessagesConversation>  getMessagesConversation(String id);
+	
+	List<MessagesConversation>  getMessagesGroup(String id);
 
 }

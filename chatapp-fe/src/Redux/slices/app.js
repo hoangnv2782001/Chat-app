@@ -18,7 +18,7 @@ const initialState = {
   users: [],
   friends: [],
   friendRequests: [],
-  chatType: null,
+
 };
 
 /**
@@ -78,12 +78,12 @@ const slice = createSlice({
       state.user = null;
       state.users = [];
       state.friendRequests = [];
-      state.chatType = null;
+ 
       state.friends = [];
+    
     },
-    selectConversation(state, action) {
-      state.chatType = action.payload.chatType;
-    },
+
+ 
   },
 });
 
@@ -100,8 +100,9 @@ export const {
   openSnackBar,
   closeSnackBar,
   fetchUser,
-  selectConversation,
+
   clearApp,
+
 } = slice.actions;
 
 /**
@@ -159,11 +160,6 @@ export function CloseSnackbar() {
   };
 }
 
-export function SelectConversation({ chatType }) {
-  return (dispatch, getState) => {
-    dispatch(slice.actions.selectConversation({ chatType }));
-  };
-}
 
 /**
  * fetch data

@@ -10,6 +10,7 @@ import jakarta.annotation.Generated;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -33,13 +34,13 @@ public class LastMessage {
 	@GeneratedValue(strategy = GenerationType.UUID)
 	private String id;
 
-	@OneToOne
+	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "conversation_id")
 	private Conversation conversation;
 	
-	@OneToOne
+	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="message_id")
-	private Message message;
+	private PrivateMessage message;
 	
 	private boolean seen;
 

@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
+
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -13,23 +15,19 @@ import com.example.chatapp.common.MessageType;
 
 import java.time.LocalDateTime;
 
-@Entity
-@Table(name = "message")
+//@Entity
+//@Table(name = "message")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@SuperBuilder
+@MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
-public class Message {
+public abstract class Message {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
-
-    @JoinColumn(name = "conversation_id")
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Conversation conversation;
-
 //    @CreatedDate
     @Column(name = "create_at")
     @Temporal(TemporalType.TIMESTAMP)
@@ -43,10 +41,10 @@ public class Message {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="sender")
     private User sender;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="receiver")
-    private User receiver;
+//
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name="receiver")
+//    private User receiver;
 
     
 }

@@ -23,10 +23,12 @@ const Profile_Menu = [
 const Nav_Buttons = [
   {
     index: 0,
+    path : "/app",
     icon: <ChatCircleDots />,
   },
   {
     index: 1,
+    path : "/group",
     icon: <Users />,
   },
   // {

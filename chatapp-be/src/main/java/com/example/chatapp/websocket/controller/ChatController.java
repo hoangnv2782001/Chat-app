@@ -19,7 +19,7 @@ public class ChatController {
 
 	private final ChatService chatService;
 
-	@MessageMapping("/message")
+	@MessageMapping("/message.private")
 	public void handleMessage(@Payload MessageDto messageDto) {
 		logger.info("message receiver {}",messageDto);
 
@@ -29,10 +29,20 @@ public class ChatController {
 
 	}
 
+	@MessageMapping("/message.group")
+	public void handleMessageGroup(@Payload MessageDto messageDto) {
+		logger.info("message receiver {}",messageDto);
+
+		logger.info("chat sender group{}", messageDto.getTime());
+
+		chatService.sendMessageToGroup(messageDto);
+
+	}
+
 	@MessageExceptionHandler
 	public void handleException(Exception exception) {
 		// ...
-		logger.error("exception : {}",exception.getMessage());
+		logger.error("exception : {}",exception.getMessage(),exception);
 
 	}
 }

@@ -7,8 +7,11 @@ import org.springframework.stereotype.Service;
 
 import com.example.chatapp.dto.request.MessageDto;
 import com.example.chatapp.dto.response.MessageResponse;
+import com.example.chatapp.mapper.MessageFactory;
 import com.example.chatapp.mapper.MessageMapper;
+import com.example.chatapp.model.GroupMessage;
 import com.example.chatapp.model.Message;
+import com.example.chatapp.model.PrivateMessage;
 
 import lombok.RequiredArgsConstructor;
 
@@ -20,31 +23,47 @@ public class ChatServiceImpl implements ChatService {
 	private final ConversationService conversationService;
 
 	private final MessageService messageService;
-	private final MessageMapper messageMapper;
+	private final MessageFactory messageFactory;
 
 	private final LastMessageService lastMessageService;
 
 	private final PresentService presentService;
-	private static final Logger logger = LoggerFactory.getLogger(ChatServiceImpl.class); 
+
+	private static final Logger logger = LoggerFactory.getLogger(ChatServiceImpl.class);
 
 	@Override
 	public void sendMessage(MessageDto messageDto, String destination) {
 		// TODO Auto-generated method stub
 
-		Message message = messageService.saveMessage(messageDto);
+		Message message = messageService.savePrivateMessage(messageDto);
 
-		MessageResponse messageResponse = messageMapper.map(message);
+		MessageResponse messageResponse = messageFactory.map(message,"Private");
 
 		messageResponse.setSender(messageDto.getSender());
-		lastMessageService.updateLastMessage(message);
+		lastMessageService.updateLastMessage((PrivateMessage) message);
 
-		if (presentService.checkOnline(messageDto.getReceiver()))
-		{
+		if (presentService.checkOnline((int) messageDto.getReceiver())) {
 			logger.info("send message is success");
 			messagingTemplate.convertAndSendToUser(String.valueOf(messageDto.getReceiver()), destination,
 					messageResponse);
 
 		}
+	}
+
+	@Override
+	public void sendMessageToGroup(MessageDto messageDto) {
+		// TODO Auto-generated method stub
+		Message message = messageService.saveGroupMessage(messageDto);
+
+		MessageResponse messageResponse = messageFactory.map(message,"Group");
+
+		messageResponse.setSender(messageDto.getSender());
+		
+		lastMessageService.updateLastMessageGroup((GroupMessage) message);
+		
+        String channel = "/topic/"+messageDto.getReceiver().toString();
+		messagingTemplate.convertAndSend(channel, messageResponse);
+
 	}
 
 }

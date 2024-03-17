@@ -45,14 +45,7 @@ const Chats = () => {
   const {conversations} = useSelector((state) => state.conversation);
   
 
-  // useEffect(() => {
-  //   socket.emit("get_direct_conversations", { user_id }, (data) => {
-  //     console.log(data); // this data is the list of conversations
-  //     // dispatch action
 
-  //     dispatch(FetchDirectConversations({ conversations: data }));
-  //   });
-  // }, []);
 
   console.log("con versation ",conversations)
 
@@ -74,10 +67,7 @@ const Chats = () => {
         sx={{
           position: "relative",
           width: 360,
-          backgroundColor:
-            theme.palette.mode === "light"
-              ? "#F8FAFF"
-              : theme.palette.background.paper,
+          backgroundColor:  "#F8FAFF",
           boxShadow: "0px 0px 2px rgba(0,0,0,0.25)",
         }}
       >
@@ -115,35 +105,19 @@ const Chats = () => {
               />
             </Search>
           </Stack> */}
-{/* 
-          Stack chứa ArchiveBox icon và một btn Archive và một đường phân cách
-          <Stack spacing={1}>
-            <Stack direction="row" alignItems={"center"} spacing={1.5}>
-              <ArchiveBox size={24} />
-              <Button>Archive</Button>
-            </Stack>
-            <Divider />
-          </Stack> */}
+
 
           {/* Stack chứa các box chat element */}
           <Stack
             direction="column"
             spacing={2}
             //chinh sua
-            sx={{ flexGrow: 1, overflowY: "scroll", height: "100%" }}
+            sx={{ flexGrow: 1, height: "100%" }}
           >
             {/* Scroll bar đã chỉnh sửa part2  */}
-            <SimpleBarStyle theme={theme} timeout={500} clickOnTrack={false}>
-              <Stack spacing={2.5}>
-                {/* <Typography variant="subtitle2" sx={{ color: "#676767" }}>
-                  Pinned
-                </Typography>
-                {ChatList.filter((element) => element.pinned).map((element) => {
-                  return <ChatElement {...element} />;
-                })}
+            {/* <SimpleBarStyle theme={theme} timeout={500} clickOnTrack={false}> */}
+              <Stack spacing={1}>
 
-                <Typography variant="subtitle2" sx={{ color: "#676767" }}>
-                  All Chats */}
                 {/* </Typography> */}
                 {conversations && conversations.map(
                   (element) => {
@@ -151,7 +125,7 @@ const Chats = () => {
                   }
                 )}
               </Stack>
-            </SimpleBarStyle>
+            {/* </SimpleBarStyle> */}
           </Stack>
         </Stack>
       </Box>

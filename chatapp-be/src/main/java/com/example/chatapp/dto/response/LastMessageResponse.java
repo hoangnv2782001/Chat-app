@@ -17,8 +17,8 @@ public class LastMessageResponse {
 	
 	
     private int sender;
-
-    private int receiver;
+//
+//    private int receiver;
 
     private LocalDateTime time;
 

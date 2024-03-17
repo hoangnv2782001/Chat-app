@@ -51,5 +51,6 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 	public void configureMessageBroker(MessageBrokerRegistry config) {
 		config.setApplicationDestinationPrefixes("/app"); 
 		config.enableSimpleBroker("/topic", "/queue");
+//		.setHeartbeatValue(new long[] {6000,6000});
 		config.setUserDestinationPrefix("/user");	}
 }

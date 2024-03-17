@@ -1,24 +1,22 @@
 import {
   Box,
-  Divider,
-  IconButton,
-  Link,
+
   Stack,
   Typography,
 } from "@mui/material";
-import React from "react";
-import { ChatList } from "../../data";
-import {
-  Search,
-  SearchIconWrapper,
-  StyledInputBase,
-} from "../../components/search";
-import { MagnifyingGlass, Plus } from "phosphor-react";
+import React, { useEffect } from "react";
+
+
+
 import { useTheme } from "@mui/material/styles";
-import { SimpleBarStyle } from "../../components/Scrollbar";
-import ChatElement from "../../components/ChatElement";
-import { useState } from "react";
-import CreateGroup from "../../sections/main/CreateGroup";
+
+import NoChatSvg from "../../assets/Illustration/NoChat.js";
+
+import GroupChat from "../../components/group/GroupChat.js";
+import { useDispatch, useSelector } from "react-redux";
+import Convensation from "../../components/Conversation";
+import useGroup from "../../hooks/useGroup.js";
+import { fetchCurrentMessages, selectConversation } from "../../Redux/slices/conversation.js";
 /**
  * Hiển thị khung chat group tương tự khung chat vs bạn
  * Gòm các thành phàn :
@@ -31,109 +29,51 @@ import CreateGroup from "../../sections/main/CreateGroup";
  */
 const Group = () => {
   const theme = useTheme();
-  const [openDialog, setOpenDialog] = useState(false);
+ 
 
-  const handleCloseDialog = () => {
-    setOpenDialog(false);
-  };
+  const { chatType,groups,current_conversation } = useSelector((state) => state.conversation);
+  const { user } = useSelector((state) => state.app);
+  const {subcribeChannels} = useGroup()
+  const dispatch = useDispatch();
+
+  useEffect(()=>{
+    dispatch(fetchCurrentMessages({ messages: [] }));
+    dispatch(selectConversation({ chatType: "group" ,conversation : null}));
+    subcribeChannels(groups,user?.id)
+  },[])
+
   return (
-    <>
-      <Stack direction={"row"} sx={{ width: "100%" }}>
-        <Box
-          sx={{
-            position: "relative",
-            width: 320,
-            backgroundColor: (theme) =>
-              theme.palette.mode === "light"
-                ? "#F8FAFF"
-                : theme.palette.background.paper,
-            boxShadow: "0px 0px 2px rgba(0,0,0,0.25)",
-          }}
-        >
-          {/*Wrapper tất cả nội dung trong chat bar và bố cục sử dụng flex*/}
-          <Stack p={3} spacing={2} sx={{ height: "100vh" }}>
-            {/* Chứa tiêu đề side bar và một button icon */}
-            <Stack
-              direction="row"
-              alignItems={"center"}
-              justifyContent="space-between"
-            >
-              <Typography variant="h5">Groups</Typography>
-            </Stack>
+    <Stack direction={"row"} sx={{ width: "100%" }}>
+      {/* của sổ chat */}
 
-            {/* Thanh search bar chứa icon MagnifyingGlass và ô nhập liệu */}
-            <Stack sx={{ width: "100%" }}>
-              <Search>
-                <SearchIconWrapper>
-                  <MagnifyingGlass color="#709CE6" />
-                </SearchIconWrapper>
-                <StyledInputBase
-                  placeholder="Search..."
-                  inputProps={{ "aria-label": "search" }}
-                />
-              </Search>
-            </Stack>
-
-            {/* Stack chứa thanh tao group*/}
-            <Stack
-              alignItems={"center"}
-              direction="row"
-              justifyContent="space-between"
-            >
-              <Typography variant="subtitle2" component={Link}>
-                Create New Group
-              </Typography>
-
-              <IconButton
-                onClick={() => {
-                  setOpenDialog(true);
-                }}
-              >
-                <Plus sx={{ color: theme.palette.primary.main }} />
-              </IconButton>
-            </Stack>
-
-            <Divider />
-
-            {/* Stack chứa các box chat element */}
-            <Stack
-              direction="column"
-              spacing={2}
-              sx={{ flexGrow: 1, overflowY: "scroll", height: "100%" }}
-            >
-              {/* Scroll bar đã chỉnh sửa part2  */}
-              <SimpleBarStyle theme={theme} timeout={500} clickOnTrack={false}>
-                {/* pinned chat */}
-                <Stack spacing={2.5}>
-                  {/* <Typography variant="subtitle2" sx={{ color: "#676767" }}>
-                    Pinned
-                  </Typography>
-                  {ChatList.filter((element) => element.pinned).map(
-                    (element) => {
-                      return <ChatElement {...element} />;
-                    }
-                  )} */}
-
-                  {/* <Typography variant="subtitle2" sx={{ color: "#676767" }}>
-                    All Chats
-                  </Typography>
-                  {ChatList.filter((element) => !element.pinned).map(
-                    (element) => {
-                      return <ChatElement {...element} />;
-                    }
-                  )} */}
-                </Stack>
-              </SimpleBarStyle>
-            </Stack>
+      <GroupChat />
+      <Box
+        sx={{
+          height: "100%",
+          width: "calc(100vw - 460px)",
+          backgroundColor:
+            theme.palette.mode === "light"
+              ? "#F0F4FA"
+              : theme.palette.background.paper,
+        }}
+      >
+        {chatType === "group" && current_conversation ? (
+          <Convensation />
+        ) : (
+          <Stack
+            spacing={2}
+            sx={{ height: "100%", width: "100%" }}
+            alignItems={"center"}
+            justifyContent={"center"}
+          >
+            <NoChatSvg />
+            <Typography variant="subtitle2">
+              Select a conversation or start new one
+            </Typography>
           </Stack>
-        </Box>
-        {/* //TODO :=> reuse conventation component */}
-      </Stack>
-
-      {openDialog && (
-        <CreateGroup open={openDialog} handleClose={handleCloseDialog} />
-      )}
-    </>
+        )}
+      </Box>
+    </Stack>
   );
 };
 

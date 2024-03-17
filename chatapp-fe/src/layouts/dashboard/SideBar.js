@@ -20,7 +20,7 @@ import { faker } from "@faker-js/faker";
 
 import useSettings from "../../hooks/useSettings";
 import AntSwitch from "../../components/AntSwitch";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { Logout } from "../../Redux/slices/auth";
 import Profile from "../../pages/dashboard/Profile";
@@ -40,8 +40,9 @@ const SideBar = () => {
   // get theme tu context
   const theme = useTheme();
 
-  // khởi tạo selected state dùng để xác định button click
-  const [selected, setSelected] = useState(0);
+  const location = useLocation();
+
+  console.log("path name ",location.pathname)
 
   const { user } = useSelector((state) => state.app);
 
@@ -101,7 +102,7 @@ const SideBar = () => {
           >
             {/* hiển thị các button icon */}
             {Nav_Buttons.map((button) =>
-              selected === button.index ? (
+              location.pathname === button.path ? (
                 /* hiển thị của button khi được click */
                 <Box
                   sx={{
@@ -128,7 +129,6 @@ const SideBar = () => {
                   }}
                   key={button.index}
                   onClick={() => {
-                    setSelected(button.index);
                     navigate(getPath(button.index));
                   }}
                 >

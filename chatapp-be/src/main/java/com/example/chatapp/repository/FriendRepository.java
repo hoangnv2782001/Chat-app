@@ -5,9 +5,11 @@ import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 
 import com.example.chatapp.model.Friend;
 
+@Repository
 public interface FriendRepository extends JpaRepository<Friend, Integer> {
 
 	@Query("SELECT c FROM Friend c WHERE (c.sender.id = :id OR  c.receiver.id = :id) AND c.status = 'ACCEPTED'")

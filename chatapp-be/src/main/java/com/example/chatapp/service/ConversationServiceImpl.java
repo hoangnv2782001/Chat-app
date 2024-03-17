@@ -6,6 +6,7 @@ import com.example.chatapp.dto.response.MessageResponse;
 import com.example.chatapp.dto.response.Notification;
 import com.example.chatapp.dto.response.UserResponse;
 import com.example.chatapp.exception.ResourceNotFoundException;
+import com.example.chatapp.mapper.MessageFactory;
 import com.example.chatapp.mapper.MessageMapper;
 import com.example.chatapp.mapper.UserMapper;
 import com.example.chatapp.model.Conversation;
@@ -32,11 +33,12 @@ public class ConversationServiceImpl implements ConversationService {
 
 	private static final Logger logger = LoggerFactory.getLogger(ConversationServiceImpl.class);
 	private final ConversationRepository conversationRepository;
-	private final MessageMapper messageMapper;
+	private final MessageFactory messageFactory;
 	private final UserMapper userMapper;
 	private final UserService userService;
 	private final FriendService friendService;
     private final NotificationService notificationService;
+    
 	@Override
 	public String startConversation(User sender, int receiver) {
 
@@ -57,7 +59,7 @@ public class ConversationServiceImpl implements ConversationService {
 
 		List<ConversationResponse> conversationResponses = conversations.stream()
 				.map(t -> ConversationResponse.builder().id(t.getId())
-						.lastMessage(messageMapper.map(t.getLastMessage()))
+						.lastMessage(messageFactory.map(t.getLastMessage()))
 						.user(userMapper.map(t.getMember1().getId() == user.getId() ? t.getMember2() : t.getMember1()))
 						.build())
 				.collect(Collectors.toList());

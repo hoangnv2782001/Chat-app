@@ -10,7 +10,7 @@ RHFTextField.prototype = {
 };
 export default function RHFTextField({ name, helperText, ...other }) {
   const { control } = useFormContext();
-  console.log("hoang123");
+
   return (
     <Controller
       name={name}

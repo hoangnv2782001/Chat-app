@@ -1,16 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { faker } from "@faker-js/faker";
-import { AWS_S3_REGION, S3_BUCKET_NAME } from "../../config";
-import { act } from "react-dom/test-utils";
-import axios from "../../utils/axios";
-import { ShowSnackbar, selectConversation } from "./app";
 
-const user_id = window.localStorage.getItem("user_id");
+
 
 const initialState = {
   conversations: [],
-  current_conversation: null,
+  groups: [],
   messages: [],
+  chatType: null,
+  current_conversation: null,
 };
 
 const slice = createSlice({
@@ -30,6 +27,7 @@ const slice = createSlice({
 
       state.conversations = [conversation, ...newConversations];
     },
+
     addConversation(state, action) {
       const conversation = action.payload.conversation;
 
@@ -39,20 +37,49 @@ const slice = createSlice({
 
       // console.log("push ", state.conversations);
     },
-    setCurrentConversation(state, action) {
-      state.current_conversation = action.payload;
-    },
+
     fetchCurrentMessages(state, action) {
       state.messages = action.payload.messages;
     },
     addMessages(state, action) {
       state.messages.push(action.payload.message);
     },
+    selectConversation(state, action) {
+      state.chatType = action.payload.chatType;
+      state.current_conversation = action.payload.conversation;
+    },
+    setCurrentConversation(state,action){
+      state.current_conversation = action.payload;
+    },
     clearConversation(state, action) {
       state.conversations = [];
       state.messages = [];
-      state.current_conversation = null;
+      state.chatType = null;
+      state.current_conversation = null
+      state.groups = []
     },
+    fetchGroups(state, action) {
+      state.groups = action.payload.groups;
+    },
+
+    addGroup(state, action) {
+        const group = action.payload;
+
+        state.groups.unshift(group);
+    },
+
+    updateGroup(state, action) {
+      const group = action.payload;
+
+      const newGroups = state.groups.filter(
+        (e) => e.id !== group.id
+      );
+
+      state.groups = [group, ...newGroups];
+    },
+
+   
+  
   },
 });
 
@@ -64,42 +91,55 @@ export const {
   fetchConversations,
   addMessages,
   fetchCurrentMessages,
-  setCurrentConversation,
-
   updateConversation,
-  clearConversation
+  clearConversation,
+  addGroup,
+  fetchGroups,
+  updateGroup,
+  clearGroup,
+  selectConversation,
+  setCurrentConversation
 } = slice.actions;
 
-// ----------------------------------------------------------------------
+// export const updateGroupThunk = (message) => {
+//   return async (dispatch, getState) => {
+//     const { groups} = getState().group;
 
-export const FetchConversations = () => {
-  return async (dispatch, getState) => {
-    await axios
-      .get(
-        "/conversations",
+//     console.log("list group ", groups);
+//     const group = groups.find((e) => {
+//       return e.id === message.group;
+//     });
 
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${getState().auth.token}`,
-          },
-        }
-      )
-      .then(function (response) {
-        console.log("conversation : ", response.data);
-        dispatch(
-          dispatch(
-            slice.actions.fetchConversations({
-              conversations: response.data,
-            })
-          )
-        );
-      })
-      .catch(function (error) {
-        console.log("error : ", error);
-      });
-  };
-};
+//     if (group) {
+//       const newGroup = {
+//         ...group,
+//         lastMessage: {
+//           ...message,
+//           sender: message.sender.id ,
+//           seen: false,
+//         },
+//       };
+//       dispatch(updateGroup(newGroup));
+//       return;
+//     }
+
+//     // console.log(currentGroup);
+
+//     // const newGroup = {
+//     //   id: message.group,
+//     //   user: currentGroup?.user
+//     //     ? currentGroup?.user
+//     //     : message.sender,
+//     //   lastMessage: {
+//     //     ...message,
+//     //     seen: false,
+//     //   },
+//     // };
+//     // dispatch(addGroup({ group: newGroup }));
+//   };
+// };
+
+
 /**
  * redux thunk update conversation
  * @param {*} conversation
@@ -107,13 +147,14 @@ export const FetchConversations = () => {
  */
 export const updateConversationThunk = (message) => {
   return async (dispatch, getState) => {
-    const { conversations, current_conversation } = getState().conversation;
+    const { conversations,groups,current_conversation,chatType } = getState().conversation;
+   
+    
 
-    console.log("list conversation ", conversations);
-    const conversation = conversations.find((e) => {
-      console.log("conversation id", e.id === message.conversation, e);
-      return e.id === message.conversation;
-    });
+    const currentConversations = chatType === 'private' ? conversations : groups;
+
+    console.log("list conversation ", currentConversations);
+    const conversation = currentConversations.find((e) =>  e.id === message.conversation);
 
     if (conversation) {
       const newConversation = {
@@ -124,7 +165,7 @@ export const updateConversationThunk = (message) => {
           seen: false,
         },
       };
-      dispatch(updateConversation(newConversation));
+      chatType === 'private' ? dispatch(updateConversation(newConversation)) : dispatch(updateGroup(newConversation))
       return;
     }
 
@@ -158,8 +199,8 @@ export const addMessagesThunk = (message) => {
 
     const { current_conversation } = getState().conversation;
 
-    if (message.sender.id === current_conversation?.user?.id) {
-      dispatch(addMessages({ message }));
+    if (message.sender.id === current_conversation?.user?.id || message.conversation === current_conversation?.id) {
+      dispatch(addMessages({ message : {...message,sender: message.sender.id} }));
 
       console.log("hu ha");
 
@@ -171,7 +212,7 @@ export const addMessagesThunk = (message) => {
           })
         );
       }
-    } else dispatch(updateConversationThunk(message));
+    }
   };
 };
 

@@ -27,10 +27,10 @@ axiosInstance.interceptors.request.use(
     console.log("request send", request.url);
     const access_token = getValueFromLocalStorage("token");
     // const access_token = "qwrtuop";
-    console.log("info ",request.headers)
-      if (request.headers) {
+    
+      if (request.headers && access_token) {
         request.headers["Authorization"] = `Bearer ${access_token}`;
-       
+        console.log("info ",request.headers,request.baseURL)
         // const newHeaders = {
         //   ...request.headers,
         //   Authorization: ,

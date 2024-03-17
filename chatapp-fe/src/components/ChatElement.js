@@ -4,13 +4,15 @@ import { styled, useTheme, alpha } from "@mui/material/styles";
 import React from "react";
 import StyledBadge from "./StyledBadge";
 import { useDispatch, useSelector } from "react-redux";
-import { SelectConversation } from "../Redux/slices/app";
+
 import DescriptionOutlinedIcon from "@mui/icons-material/DescriptionOutlined";
 import { fDate, fDateTime } from "../utils/formatTime";
 import { useConversation } from "../hooks/useConversation";
-import { setCurrentConversation } from "../Redux/slices/conversation";
+
 import BrokenImageOutlinedIcon from "@mui/icons-material/BrokenImageOutlined";
 import AttachmentOutlinedIcon from "@mui/icons-material/AttachmentOutlined";
+import { selectConversation } from "../Redux/slices/conversation";
+
 /**
  * Dùng để hiển thị các box chat
  * @param {Object} { id, name, img, msg, time, unread, online } thông tin về chat
@@ -21,7 +23,7 @@ const ChatElement = ({ id, user, lastMessage }) => {
 
   const { getMessages } = useConversation();
 
-  const theme = useTheme();
+  const {chatType} = useSelector(state=>state.conversation)
   return (
     // wrapper element
     <StyledChatBox
@@ -30,21 +32,13 @@ const ChatElement = ({ id, user, lastMessage }) => {
 
         borderRadius: 1,
         overflow: "hidden",
-
-        // backgroundColor: isSelected
-        //   ? theme.palette.mode === "light"
-        //     ? alpha(theme.palette.primary.main, 0.5)
-        //     : theme.palette.primary.main
-        //   : theme.palette.mode === "light"
-        //   ? "#fff"
-        //   : theme.palette.background.paper,
       }}
       p={0.5}
       // handle select conversation
       onClick={() => {
-        dispatch(SelectConversation({ chatType: "individual" }));
-        dispatch(setCurrentConversation({ id, user }));
-        getMessages(id);
+        dispatch(selectConversation({ chatType: "private",conversation :{ id, user } }));
+      
+        getMessages("private",id);
       }}
     >
       {/* Wrapper toàn bộ các nội dung hiển thị trong box chat */}
@@ -132,9 +126,6 @@ const ChatElement = ({ id, user, lastMessage }) => {
   );
 };
 
-const truncateText = (string, n) => {
-  return string?.length > n ? `${string?.slice(0, n)}...` : string;
-};
 
 const StyledChatBox = styled(Box)(({ theme }) => ({
   "&:hover": {
@@ -142,7 +133,7 @@ const StyledChatBox = styled(Box)(({ theme }) => ({
   },
 }));
 
-const getTypeMssage = (lastMessage) => {
+export const getTypeMssage = (lastMessage) => {
   switch (lastMessage.type) {
     case "TEXT":
       return lastMessage?.content;

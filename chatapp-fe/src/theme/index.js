@@ -50,7 +50,7 @@ export default function ThemeProvider({ children }) {
       palette: isLight ? palette.light : palette.dark,
       typography,
       breakpoints,
-      shape: { borderRadius: 8 },
+      shape: { borderRadius: 4 },
       direction: themeDirection,
       shadows: isLight ? shadows.light : shadows.dark,
       customShadows: isLight ? customShadows.light : customShadows.dark,

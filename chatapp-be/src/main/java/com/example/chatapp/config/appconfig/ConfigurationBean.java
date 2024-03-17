@@ -14,7 +14,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import com.cloudinary.Cloudinary;
 
 @Configuration
-@EnableJpaAuditing
 public class ConfigurationBean {
 	@Value("${cloudinary.cloud-name}")
 	private String cloud_name;

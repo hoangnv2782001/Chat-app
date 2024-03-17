@@ -21,9 +21,6 @@ public class MessageResponse {
     private String conversation;
 
     private UserResponse sender;
-
-    private int receiver;
-
     
     private LocalDateTime time;
 

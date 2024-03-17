@@ -48,7 +48,7 @@ public class ApiHandleException {
 
 	@ExceptionHandler({UserAlreadyExistException.class,ResourceNotFoundException.class})
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
-	public ObjectResponse handleUserAlreadyException(UserAlreadyExistException ex) {
+	public ObjectResponse handleUserAlreadyException(Exception ex) {
 
 		logger.error(ex.getMessage());
 
@@ -59,6 +59,7 @@ public class ApiHandleException {
 	@ExceptionHandler({MailCustomException.class,Exception.class})
 	public ResponseEntity<?> handleMailException(Exception ex) {
 		logger.error("internal error : {}", ex.getMessage());
+		logger.trace("error", ex);
 		return ResponseEntity.badRequest().body(
 				ObjectResponse.builder()
 				.httpStatus("500")

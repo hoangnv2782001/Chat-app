@@ -44,7 +44,7 @@ public class WebSocketEventListener {
 			
 
 		} catch (Exception ex) {
-			logger.error("handle connect socket erorr {}", ex.getMessage());
+			logger.error("handle connect socket erorr {}{}", ex.getMessage(),ex);
 		}
 
 	}

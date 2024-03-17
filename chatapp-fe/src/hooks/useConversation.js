@@ -2,9 +2,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { socket } from "../Stomp";
 import {
   addMessages,
-  addMessagesThunk,
+
   fetchCurrentMessages,
   removeConversationThunk,
+  selectConversation,
   setCurrentConversation,
   updateConversationThunk,
 } from "../Redux/slices/conversation";
@@ -15,23 +16,21 @@ import {
   getMessagesConversation,
   startConversationApi,
 } from "../service/ConversationsService";
-import { useConversations } from "./useConversations";
+
 import {
-  SelectConversation,
   ShowSnackbar,
-  selectConversation,
+
 } from "../Redux/slices/app";
 import { uploadFileApi } from "../service/FileService";
 
 export const useConversation = () => {
-  const { removeConversation } = useConversations();
+
 
   const dispatch = useDispatch();
-  
 
-  const getMessages = async (id) => {
+  const getMessages = async (type,id) => {
     try {
-      const response = await getMessagesConversation(id);
+      const response = await getMessagesConversation(type,id);
 
       if (response.status === 200) {
         dispatch(fetchCurrentMessages({ messages: response.data }));
@@ -46,7 +45,7 @@ export const useConversation = () => {
    * send message
    * @param {*} message
    */
-  const sendMessage = async (message, conversations, currentConversation) => {
+  const sendMessage = async (message,chatType,currentConversation) => {
     console.log("message id conversation ", !message.conversation);
     if (!message.conversation) {
       const id = await createConversation(currentConversation);
@@ -56,12 +55,12 @@ export const useConversation = () => {
     console.log("message send", message);
 
     socket.publish({
-      destination: "/app/message",
+      destination: `/app/message.${chatType}`,
       body: JSON.stringify(message),
-    });
+    }); 
 
-    dispatch(addMessages({ message }));
-    dispatch(updateConversationThunk(message))
+    dispatch(addMessages({ message : {...message,sender: message.sender.id}  }));
+    dispatch(updateConversationThunk(message));
   };
 
   /**
@@ -100,16 +99,26 @@ export const useConversation = () => {
 
       if (response.status === 200) {
         console.log("response conversation", response);
-        dispatch(SelectConversation({ chatType: "individual" }));
-        dispatch(setCurrentConversation({ id: response.data, user }));
+        dispatch(
+          selectConversation({
+            chatType: "private",
+            conversation: { id: response.data, user },
+          })
+        );
+
         getMessages(response.data);
       }
     } catch (err) {
       if (err.status === 404) {
         console.log("err conversation", err);
 
-        dispatch(setCurrentConversation({ id: null, user }));
-        dispatch(SelectConversation({ chatType: "individual" }));
+     
+        dispatch(
+          selectConversation({
+            chatType: "private",
+            conversation: { id: null, user },
+          })
+        );
         dispatch(fetchCurrentMessages({ messages: [] }));
         // getMessages
       }
@@ -118,10 +127,10 @@ export const useConversation = () => {
 
   /**
    * send file
-   * @param {*} file 
-   * @param {*} message 
+   * @param {*} file
+   * @param {*} message
    */
-  const sendFile = async (file, message) => {
+  const sendFile = async (file, message,chatType) => {
     try {
       const response = await uploadFileApi(file);
 
@@ -131,14 +140,14 @@ export const useConversation = () => {
 
         message.content = file;
 
-        sendMessage(message);
+        sendMessage(message,chatType);
       }
     } catch (err) {
       // if (err.status === 404) {
       //   console.log("err conversation", err);
 
       //   dispatch(setCurrentConversation({ id: null, user }));
-      //   dispatch(SelectConversation({ chatType: "individual" }));
+      //   dispatch(SelectConversation({ chatType: "private" }));
       //   // getMessages
       // }
       dispatch(

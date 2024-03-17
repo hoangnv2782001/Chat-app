@@ -47,7 +47,7 @@ export const TextMessage = ({ message, menu, id }) => {
   return (
     <Stack
       direction="row"
-      justifyContent={message.receiver === id ? "start" : "end"}
+      justifyContent={message.sender === id ? "end" : "start"}
     >
       <Tooltip key={id} placement="right" title={fDateTime(message?.time)}>
         <Box
@@ -56,12 +56,12 @@ export const TextMessage = ({ message, menu, id }) => {
             borderRadius: 1.5,
             width: "max-content",
             backgroundColor:
-              message.receiver === id ? "#F0F0F0" : theme.palette.primary.main,
+              message.sender !== id ? "#F0F0F0" : theme.palette.primary.main,
           }}
         >
           <Typography
             variant="body2"
-            color={message.receiver === id ? theme.palette.text : "#fff"}
+            color={message.sender !== id ? theme.palette.text : "#fff"}
           >
             {message.content}
           </Typography>
@@ -88,7 +88,7 @@ export const MediaMessage = ({ message, menu, id }) => {
   return (
     <Stack
       direction="row"
-      justifyContent={message.receiver === id ? "start" : "end"}
+      justifyContent={message.sender === id ? "end" : "start"}
     >
       <Tooltip key={id} placement="right" title={fDateTime(message?.time)}>
         <Box
@@ -134,7 +134,7 @@ export const ReplyMessage = ({ message, menu, id }) => {
   return (
     <Stack
       direction="row"
-      justifyContent={message.receiver === id ? "start" : "end"}
+      justifyContent={message.sender === id ? "end" : "start"}
     >
       <Tooltip key={id} placement="right" title={fDateTime(message?.time)}>
         <Box
@@ -165,7 +165,7 @@ export const ReplyMessage = ({ message, menu, id }) => {
             </Stack>
             <Typography
               variant="body2"
-              color={message.receiver === id ? theme.palette.text : "#fff"}
+              color={message.sender !== id ? theme.palette.text : "#fff"}
             >
               {message.reply}
             </Typography>
@@ -192,7 +192,7 @@ export const LinkMessage = ({ message, menu, id }) => {
   return (
     <Stack
       direction="row"
-      justifyContent={message.receiver === id ? "start" : "end"}
+      justifyContent={message.sender === id ? "end" : "start"}
     >
       <Tooltip key={id} placement="right" title={fDateTime(message?.time)}>
         <Box
@@ -201,7 +201,7 @@ export const LinkMessage = ({ message, menu, id }) => {
             borderRadius: 1.5,
             width: "max-content",
             backgroundColor:
-              message.receiver === id ? "#F0F0F0" : theme.palette.primary.main,
+              message.sender !== id ? "#F0F0F0" : theme.palette.primary.main,
           }}
         >
           <Stack
@@ -239,7 +239,7 @@ export const DocxMessage = ({ message, menu, id }) => {
   return (
     <Stack
       direction="row"
-      justifyContent={message.receiver === id ? "start" : "end"}
+      justifyContent={message.sender === id ? "end" : "start"}
       alignItems={"center"}
     >
       <Tooltip key={id} placement="right" title={fDateTime(message?.time)}>
@@ -268,7 +268,7 @@ export const DocxMessage = ({ message, menu, id }) => {
                   variant="subtitle2"
                   sx={{
                     color:
-                      message.receiver === id ? theme.palette.text : "#000",
+                      message.sender !== id ? theme.palette.text : "#000",
                   }}
                 >
                   {name}

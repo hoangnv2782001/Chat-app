@@ -6,5 +6,6 @@ public interface ChatService {
 
     void sendMessage(MessageDto messageDto, String destination);
     
+    void sendMessageToGroup(MessageDto messageDto);
 
 }

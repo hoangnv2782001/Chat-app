@@ -97,7 +97,10 @@ export const useAuth = () => {
       showSnackbar({ severity: "error", message: "Otp is invalid" });
     }
   };
-
+  /**
+   * forgot pass
+   * @param {*} data
+   */
   const forgotPassword = async (data) => {
     try {
       const response = await forgotPasswordApi(data);
@@ -110,19 +113,22 @@ export const useAuth = () => {
     }
   };
 
-  
+  /**
+   * reset pass
+   * @param {*} data
+   */
   const resetPassword = async (data) => {
     try {
       const response = await resetPasswordApi(data);
 
       if (response.status === 200) {
         showSnackbar({ severity: "success", message: response.data.message });
-        navigate("/auth/login")
+        navigate("/auth/login");
       }
     } catch (err) {
       showSnackbar({ severity: "error", message: err.data?.message });
     }
   };
 
-  return { login, register, verifyAccount,forgotPassword,resetPassword };
+  return { login, register, verifyAccount, forgotPassword, resetPassword };
 };

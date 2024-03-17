@@ -8,6 +8,7 @@ import { useTheme } from "@mui/material/styles";
 import useResponsive from "../../hooks/useResponsive";
 import { useSelector } from "react-redux";
 import { SimpleBarStyle } from "../Scrollbar";
+import HeaderGroup from "./HeaderGroup";
 /**
  * Convensation tao khung chat hôi thoai
  * @returns {Conponent}
@@ -19,11 +20,11 @@ const Convensation = () => {
 
   const messageListRef = useRef(null);
 
-  const { messages } = useSelector(
+  const { messages,current_conversation,chatType } = useSelector(
     (state) => state.conversation
   );
 
-  const {current_conversation} = useSelector((state) => state.conversation);
+
 
   useEffect(() => {
     // Scroll to the bottom of the message list when new messages are added
@@ -36,7 +37,7 @@ const Convensation = () => {
   return (
     <Stack sx={{ height:"100%", maxHeight:"100vh",width:"100%"}}>
       {/* header chat */}
-      <Header {...current_conversation.user}/>
+     { chatType === 'private' ?<Header {...current_conversation.user}/> : <HeaderGroup {...current_conversation}/>}
 
       {/* chat content */}
 

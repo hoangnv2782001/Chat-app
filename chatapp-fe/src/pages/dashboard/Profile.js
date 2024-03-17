@@ -3,9 +3,11 @@ import {
   Badge,
   Box,
   Button,
-  Dialog,
-  DialogActions,
+
+
+
   DialogContent,
+
 
 
   Skeleton,
@@ -15,6 +17,8 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
+
+import Dialog from '@mui/material/Dialog';
 import { CaretLeft, ClosedCaptioning } from "phosphor-react";
 import React, { useRef, useState } from "react";
 
@@ -101,6 +105,7 @@ const Profile = ({ open, handleClose }) => {
       keepMounted
       onClose={handleClose}
       aria-describedby="alert-dialog-slide-description"
+      
       sx={{
         zIndex: 1400,
         width: "fit-content",

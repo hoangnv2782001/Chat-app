@@ -18,10 +18,17 @@ public class MessageController {
 	
 	private final MessageService messageService;
 	
-	@GetMapping("/{id}")
+	@GetMapping("/private/{id}")
 	public ResponseEntity<?> getMessagesConversation(@PathVariable("id") String id){
 		
 		return ResponseEntity.ok(messageService.getMessagesConversation(id));
+		
+	}
+	
+	@GetMapping("/group/{id}")
+	public ResponseEntity<?> getMessagesGroup(@PathVariable("id") String id){
+		
+		return ResponseEntity.ok(messageService.getMessagesGroup(id));
 		
 	}
 

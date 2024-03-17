@@ -15,9 +15,9 @@ const connectSocket = (token, onConnect) => {
     connectHeaders: {
       // Authorization: `Bearer ${token}`,
     },
-    // reconnectDelay: 5000,
+    reconnectDelay: 5000,
     // heartbeatIncoming: 6000,
-    // heartbeatOutgoing: 6000,
+    // heartbeatOutgoing: 0,
   });
 
   

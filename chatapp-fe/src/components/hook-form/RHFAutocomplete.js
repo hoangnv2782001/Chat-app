@@ -9,9 +9,8 @@ RHFAutocomplete.prototype = {
   label: PropTypes.string,
   helperText: PropTypes.node,
 };
-export default function RHFAutocomplete({ name, label, helperText, ...other }) {
-  const { control, setValue } = useFormContext();
- 
+export default function RHFAutocomplete({control, name, label, helperText, ...other }) {
+  const {  setValue, getValues } = useFormContext();
   return (
     <Controller
       name={name}
@@ -22,10 +21,10 @@ export default function RHFAutocomplete({ name, label, helperText, ...other }) {
             {...field}
             fullWidth
             error={!!error}
-            
-            onChange={(event, newValue) =>
-              setValue(name, newValue, { shouldValidate: true })
-            }
+            onChange={(event, newValue) => {
+             
+              setValue(name, newValue, { shouldValidate: true });
+            }}
             value={
               typeof field.value === "number" && field.value === 0
                 ? ""

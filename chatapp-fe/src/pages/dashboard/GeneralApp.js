@@ -1,4 +1,4 @@
-import React, { Suspense, lazy } from "react";
+import React, { Suspense, lazy, useEffect } from "react";
 import Chats from "./Chats.js";
 import { Outlet, useSearchParams } from "react-router-dom";
 
@@ -7,9 +7,10 @@ import { Box } from "@mui/material";
 import Convensation from "../../components/Conversation/index.js";
 import { useTheme } from "@mui/material/styles";
 import Contact from "../../components/Contact.js";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import NoChatSvg from "../../assets/Illustration/NoChat.js";
+import { fetchCurrentMessages, selectConversation } from "../../Redux/slices/conversation.js";
 
 /**
  * Hiển thi phần chính của app
@@ -18,11 +19,15 @@ import NoChatSvg from "../../assets/Illustration/NoChat.js";
 
 const GeneralApp = () => {
   const theme = useTheme();
+const dispatch = useDispatch()
+  const { sidebar } = useSelector((state) => state.app);
 
-  const { sidebar, chatType } = useSelector((state) => state.app);
+  const {chatType , current_conversation} = useSelector(state=>state.conversation)
 
-  console.log("side bar:", sidebar);
-  const [searchParams] = useSearchParams();
+  useEffect(()=>{
+    dispatch(fetchCurrentMessages({ messages: [] }));
+    dispatch(selectConversation({ chatType: "private" ,conversation : null}));
+  },[])
 
   return (
     <Stack direction={"row"} sx={{ width: "100%" }}>
@@ -36,14 +41,9 @@ const GeneralApp = () => {
             theme.palette.mode === "light"
               ? "#F0F4FA"
               : theme.palette.background.paper,
-          borderBottom:
-            searchParams.get("type") === "individual-chat" &&
-            searchParams.get("id")
-              ? "0px"
-              : "6px solid #0162C4",
         }}
       >
-        {chatType ? (
+        {chatType === 'private' && current_conversation ? (
           <Convensation />
         ) : (
           <Stack
