@@ -15,11 +15,9 @@ import lombok.NoArgsConstructor;
 @Builder
 public class LastMessageResponse {
 	
-	
-    private int sender;
-//
-//    private int receiver;
 
+    private UserResponse sender;
+    
     private LocalDateTime time;
 
     private String content;

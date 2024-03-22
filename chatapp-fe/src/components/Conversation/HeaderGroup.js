@@ -5,20 +5,15 @@ import {
   Avatar,
   Typography,
   IconButton,
-  Divider,
-  Menu,
-  MenuItem,
-  Fade,
+
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import { CaretDown, MagnifyingGlass, Phone, VideoCamera } from "phosphor-react";
+import { CaretDown } from "phosphor-react";
 import React from "react";
 
-import { ToggleSidebar, toggleSidebar } from "../../Redux/slices/app";
-import { useDispatch, useSelector } from "react-redux";
-import StyledBadge from "../StyledBadge";
-import useResponsive from "../../hooks/useResponsive";
-import { useConversation } from "../../hooks/useConversation";
+import {  togglesidebar } from "../../Redux/slices/app";
+import { useDispatch } from "react-redux";
+
 /**
  * Hiển thi header khung chat
  * @returns {Component}
@@ -26,31 +21,14 @@ import { useConversation } from "../../hooks/useConversation";
 const HeaderGroup = ({ id, name, avatar, members}) => {
   // khoi tao theme
   const theme = useTheme();
-
-  // khởi tao dispatch
-  const dispatch = useDispatch();
-  const { conversations ,current_conversation} = useSelector((state) => state.conversation);
-
-
-  // const dispatch = useDispatch();
-  const isMobile = useResponsive("between", "md", "xs", "sm");
   // const theme = useTheme();
 
-  const { deleteConversation } = useConversation();
+  const dispatch = useDispatch();
 
-  const [conversationMenuAnchorEl, setConversationMenuAnchorEl] =
-    React.useState(null);
-  const openConversationMenu = Boolean(conversationMenuAnchorEl);
   const handleClickConversationMenu = (event) => {
-    setConversationMenuAnchorEl(event.currentTarget);
+       dispatch(togglesidebar())
   };
-  const handleCloseConversationMenu = () => {
-    setConversationMenuAnchorEl(null);
-    console.log("delete conversation", current_conversation?.id);
-    if (current_conversation?.id) {
-      deleteConversation(current_conversation.id, conversations);
-    }
-  };
+ 
 
   return (
     <Box
@@ -90,50 +68,11 @@ const HeaderGroup = ({ id, name, avatar, members}) => {
 
         <Stack alignItems={"center"} direction="row" spacing={3}>
           <IconButton
-            id="conversation-positioned-button"
-            aria-controls={
-              openConversationMenu ? "conversation-positioned-menu" : undefined
-            }
-            aria-haspopup="true"
-            aria-expanded={openConversationMenu ? "true" : undefined}
             onClick={handleClickConversationMenu}
           >
             <CaretDown />
           </IconButton>
-          <Menu
-            MenuListProps={{
-              "aria-labelledby": "fade-button",
-            }}
-            TransitionComponent={Fade}
-            id="conversation-positioned-menu"
-            aria-labelledby="conversation-positioned-button"
-            anchorEl={conversationMenuAnchorEl}
-            open={openConversationMenu}
-            onClose={handleCloseConversationMenu}
-            anchorOrigin={{
-              vertical: "bottom",
-              horizontal: "right",
-            }}
-            transformOrigin={{
-              vertical: "top",
-              horizontal: "right",
-            }}
-          >
-            <Box p={1}>
-              <Stack spacing={1}>
-                <MenuItem onClick={handleCloseConversationMenu}>
-                  <Stack
-                    sx={{ minWidth: 100 }}
-                    direction="row"
-                    alignItems={"center"}
-                    justifyContent="space-between"
-                  >
-                    <span>{"Delete conversation"}</span>
-                  </Stack>{" "}
-                </MenuItem>
-              </Stack>
-            </Box>
-          </Menu>
+        
         </Stack>
       </Stack>
     </Box>

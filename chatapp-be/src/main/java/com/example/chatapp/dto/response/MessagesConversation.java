@@ -19,7 +19,7 @@ public class MessagesConversation {
 
 	private String id;
 	
-    private int sender;
+    private UserResponse sender;
 
     private LocalDateTime time;
 

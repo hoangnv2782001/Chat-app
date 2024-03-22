@@ -1,5 +1,4 @@
 
-
 package com.example.chatapp.service;
 
 import java.util.List;
@@ -11,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.example.chatapp.dto.request.GroupDto;
+import com.example.chatapp.dto.request.MemberDto;
 import com.example.chatapp.dto.response.GroupResponse;
 import com.example.chatapp.dto.response.LastMessageResponse;
 import com.example.chatapp.dto.response.MemberResponse;
@@ -35,7 +35,7 @@ public class GroupServiceImpl implements GroupService {
 	private final UserService userService;
 
 	private final ModelMapper modelMapper;
-	
+
 	private final MessageFactory messageFactory;
 
 	private static final Logger logger = LoggerFactory.getLogger(GroupServiceImpl.class);
@@ -64,16 +64,21 @@ public class GroupServiceImpl implements GroupService {
 	}
 
 	@Override
-	public void addMember(int id) {
+	public void addMember(String groupId, List<MemberDto> memberDtos) {
 		// TODO Auto-generated method stub
-		User user = userService.findUser(id);
+
+		List<Member> members = memberDtos.stream().map(t -> Member.builder().group(Group.builder().id(groupId).build())
+				.user(User.builder().id(t.getId()).build()).build()).collect(Collectors.toList());
+		memberService.addMembers(members);
 
 	}
 
 	@Override
-	public void removeMember(int id) {
+	public void removeMember(String id) {
 		// TODO Auto-generated method stub
+		Member member = Member.builder().id(id).build();
 
+		memberService.removeMember(member);
 	}
 
 	@Override
@@ -84,27 +89,25 @@ public class GroupServiceImpl implements GroupService {
 
 		List<GroupResponse> groupResponses = groups.stream().map(t -> {
 			MemberResponse memberResponse = modelMapper.map(t.getAdmin(), MemberResponse.class);
-			
-			
+
 			LastMessageResponse lastMessageResponse = messageFactory.map(t.getLastMessage());
-			GroupResponse groupResponse = GroupResponse.builder().id(t.getId())
-					.name(t.getName())
-					.avatar(t.getAvatar())
-					.channel("/topic/"+t.getId())
-					.build();
-			
+			GroupResponse groupResponse = GroupResponse.builder().id(t.getId()).name(t.getName()).avatar(t.getAvatar())
+					.channel("/topic/" + t.getId()).build();
+
 			List<Member> members = t.getMembers();
-			
-			List<MemberResponse> memberResponses = members.stream().map(member ->modelMapper.map(member.getUser(), MemberResponse.class))
-					.collect(Collectors.toList());
+
+			List<MemberResponse> memberResponses = members.stream().map(member -> {
+				MemberResponse memberResponse2 = modelMapper.map(member.getUser(), MemberResponse.class);
+				memberResponse2.setMemberId(member.getId());
+				return memberResponse2;
+			}).collect(Collectors.toList());
 			groupResponse.setAdmin(memberResponse);
 			groupResponse.setMembers(memberResponses);
-			
+
 			groupResponse.setLastMessage(lastMessageResponse);
 			return groupResponse;
 		}).collect(Collectors.toList());
 
-		
 		return groupResponses;
 	}
 

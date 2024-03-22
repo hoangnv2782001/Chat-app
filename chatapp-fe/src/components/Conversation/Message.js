@@ -15,7 +15,7 @@ import {  useSelector } from "react-redux";
  * @param {Boolean} menu
  * @returns {Component}
  */
-const Message = ({ isMobile, menu }) => {
+const Message = ({ menu }) => {
 
 
   const { messages } = useSelector(

@@ -4,32 +4,21 @@ import {
   IconButton,
   InputAdornment,
   TextField,
-  Fab,
-  Tooltip,
 } from "@mui/material";
 
 import { useTheme, styled } from "@mui/material/styles";
 import data from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
 import {
-  Camera,
-  File,
   Image,
   LinkSimple,
   PaperPlaneTilt,
   Smiley,
-  Sticker,
-  User,
+
 } from "phosphor-react";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import useResponsive from "../../hooks/useResponsive";
-import { socket } from "../../Stomp";
-import conversation, {
-  AddConversation,
-  AddMessage,
-  SetNewChat,
-} from "../../Redux/slices/conversation";
+
 import { useConversation } from "../../hooks/useConversation";
 /**
  * Footer cua phần chat bao gồm :

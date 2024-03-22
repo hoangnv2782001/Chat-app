@@ -1,7 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-
-
 const initialState = {
   conversations: [],
   groups: [],
@@ -48,38 +46,43 @@ const slice = createSlice({
       state.chatType = action.payload.chatType;
       state.current_conversation = action.payload.conversation;
     },
-    setCurrentConversation(state,action){
+    setCurrentConversation(state, action) {
       state.current_conversation = action.payload;
     },
     clearConversation(state, action) {
       state.conversations = [];
       state.messages = [];
       state.chatType = null;
-      state.current_conversation = null
-      state.groups = []
+      state.current_conversation = null;
+      state.groups = [];
     },
     fetchGroups(state, action) {
       state.groups = action.payload.groups;
     },
 
     addGroup(state, action) {
-        const group = action.payload;
+      const group = action.payload;
 
-        state.groups.unshift(group);
+      state.groups.unshift(group);
     },
 
     updateGroup(state, action) {
       const group = action.payload;
 
-      const newGroups = state.groups.filter(
-        (e) => e.id !== group.id
-      );
+      const newGroups = state.groups.filter((e) => e.id !== group.id);
 
       state.groups = [group, ...newGroups];
     },
 
-   
-  
+    appendMembers(state, action) {
+      state.current_conversation.members.push(...action.payload.members);
+    },
+    deleteMember(state, action) {
+      const members = state.current_conversation.members;
+      state.current_conversation.members = members.filter(
+        (e) => e.id !== action.payload
+      );
+    },
   },
 });
 
@@ -98,7 +101,9 @@ export const {
   updateGroup,
   clearGroup,
   selectConversation,
-  setCurrentConversation
+  setCurrentConversation,
+  appendMembers,
+  deleteMember,
 } = slice.actions;
 
 // export const updateGroupThunk = (message) => {
@@ -139,7 +144,6 @@ export const {
 //   };
 // };
 
-
 /**
  * redux thunk update conversation
  * @param {*} conversation
@@ -147,25 +151,29 @@ export const {
  */
 export const updateConversationThunk = (message) => {
   return async (dispatch, getState) => {
-    const { conversations,groups,current_conversation,chatType } = getState().conversation;
-   
-    
+    const { conversations, groups, current_conversation, chatType } =
+      getState().conversation;
 
-    const currentConversations = chatType === 'private' ? conversations : groups;
+    const currentConversations =
+      chatType === "private" ? conversations : groups;
 
     console.log("list conversation ", currentConversations);
-    const conversation = currentConversations.find((e) =>  e.id === message.conversation);
+    const conversation = currentConversations.find(
+      (e) => e.id === message.conversation
+    );
 
     if (conversation) {
       const newConversation = {
         ...conversation,
         lastMessage: {
           ...message,
-          sender: message.sender.id ,
+          sender: message.sender,
           seen: false,
         },
       };
-      chatType === 'private' ? dispatch(updateConversation(newConversation)) : dispatch(updateGroup(newConversation))
+      chatType === "private"
+        ? dispatch(updateConversation(newConversation))
+        : dispatch(updateGroup(newConversation));
       return;
     }
 
@@ -199,8 +207,11 @@ export const addMessagesThunk = (message) => {
 
     const { current_conversation } = getState().conversation;
 
-    if (message.sender.id === current_conversation?.user?.id || message.conversation === current_conversation?.id) {
-      dispatch(addMessages({ message : {...message,sender: message.sender.id} }));
+    if (
+      message.sender.id === current_conversation?.user?.id ||
+      message.conversation === current_conversation?.id
+    ) {
+      dispatch(addMessages({ message }));
 
       console.log("hu ha");
 

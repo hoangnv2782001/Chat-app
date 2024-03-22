@@ -100,35 +100,12 @@ export const {
   openSnackBar,
   closeSnackBar,
   fetchUser,
-
+  togglesidebar,
   clearApp,
 
 } = slice.actions;
 
-/**
- * mo side bar
- * @returns
- */
-export function ToggleSidebar() {
-  return async (dispatch, getState) => {
-    dispatch(slice.actions.togglesidebar());
-  };
-}
 
-/**
- * update loai side bar hien thi
- * @param {*} type
- * @returns
- */
-export function UpdateSidebarType(type) {
-  return async (dispatch, getState) => {
-    dispatch(
-      slice.actions.updateSidebarType({
-        type,
-      })
-    );
-  };
-}
 
 /**
  * hiem thi message thong bao

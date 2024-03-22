@@ -16,6 +16,7 @@ import lombok.NoArgsConstructor;
 public class MemberResponse {
 
 	private int id;
+	private String memberId;
 	private String name;
 	private String avatar;
 }

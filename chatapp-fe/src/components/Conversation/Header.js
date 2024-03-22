@@ -11,13 +11,13 @@ import {
   Fade,
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import { CaretDown, MagnifyingGlass, Phone, VideoCamera } from "phosphor-react";
+import { CaretDown } from "phosphor-react";
 import React from "react";
 
-import { ToggleSidebar, toggleSidebar } from "../../Redux/slices/app";
+import {  toggleSidebar } from "../../Redux/slices/app";
 import { useDispatch, useSelector } from "react-redux";
 import StyledBadge from "../StyledBadge";
-import useResponsive from '../../hooks/useResponsive'
+
 import { useConversation } from "../../hooks/useConversation";
 /**
  * Hiển thi header khung chat
@@ -30,11 +30,6 @@ const Header = ({ id, name, img, online }) => {
   // khởi tao dispatch
   const dispatch = useDispatch();
   const {conversations,current_conversation} = useSelector(state => state.conversation)
-
-
-  // const dispatch = useDispatch();
-  const isMobile = useResponsive("between", "md", "xs", "sm");
-  // const theme = useTheme();
 
   const {deleteConversation} = useConversation()
 
@@ -73,10 +68,7 @@ const Header = ({ id, name, img, online }) => {
       >
         {/* Hiển thị avatar trong 2 th  online : offline */}
         <Stack
-          onClick={() => {
-            console.log("open sidebar")
-            dispatch(ToggleSidebar());
-          }}
+        
           direction="row"
           spacing={2}
         >

@@ -12,8 +12,7 @@ import { useConversation } from "../../hooks/useConversation";
 
 const GroupElement = ({ id, avatar, name, admin, members, lastMessage }) => {
   const dispatch = useDispatch();
-
-  const sender = members.find(e => e.id=== lastMessage.sender).name
+  
   const { getMessages } = useConversation();
 
   const { user } = useSelector((state) => state.app);
@@ -105,7 +104,7 @@ const GroupElement = ({ id, avatar, name, admin, members, lastMessage }) => {
             >
               {lastMessage && (
                 <>
-                  {lastMessage.sender !== user.id ? `${sender}: ` : "You: "}
+                  {lastMessage.sender.id !== user.id ? `${lastMessage.sender.name}: ` : "You: "}
                   {lastMessage && getTypeMssage(lastMessage)}
                 </>
               )}

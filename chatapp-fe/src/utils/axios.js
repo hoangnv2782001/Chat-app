@@ -18,7 +18,7 @@ axiosInstance.interceptors.response.use(
   //   when occur errr , return promise reject data if resonse !=null or "Something went wrong"
   (error) =>
     Promise.reject(
-      (error.response) || "Something went wrong"
+      (error) || "Something went wrong"
     )
 );
 

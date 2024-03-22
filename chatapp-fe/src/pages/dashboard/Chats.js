@@ -1,7 +1,5 @@
 import {
   Box,
-  Button,
-  Divider,
   IconButton,
   Stack,
   Typography,
@@ -9,24 +7,15 @@ import {
 
 import { useTheme } from "@mui/material/styles";
 import {
-  ArchiveBox,
-  CircleDashed,
-  MagnifyingGlass,
+
   Users,
 } from "phosphor-react";
 import React from "react";
-import { ChatList } from "../../data";
 
-import { SimpleBarStyle } from "../../components/Scrollbar";
-import {
-  Search,
-  SearchIconWrapper,
-  StyledInputBase,
-} from "../../components/search";
 import ChatElement from "../../components/ChatElement";
 import { useState } from "react";
 import Friends from "../../sections/main/Friends";
-import { useEffect } from "react";
+
 import { useDispatch, useSelector } from "react-redux";
 import useResponsive from '../../hooks/useResponsive'
 /**

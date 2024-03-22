@@ -5,7 +5,6 @@ import java.util.List;
 import com.example.chatapp.model.Member;
 
 public interface MemberService {
-	void addMember(Member member);
 	
 	void addMembers(List<Member> members);
 	

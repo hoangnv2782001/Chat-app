@@ -2,7 +2,7 @@ import {
   Avatar,
   Badge,
   Box,
-  Button,
+
 
 
 
@@ -19,15 +19,14 @@ import {
 } from "@mui/material";
 
 import Dialog from '@mui/material/Dialog';
-import { CaretLeft, ClosedCaptioning } from "phosphor-react";
 import React, { useRef, useState } from "react";
 
 import CloseIcon from "@mui/icons-material/Close";
+
+import CameraAltOutlinedIcon from "@mui/icons-material/CameraAltOutlined";
 import { useSelector } from "react-redux";
 
 import img from "../../assets/Images/cover.png";
-import CameraAltOutlinedIcon from "@mui/icons-material/CameraAltOutlined";
-
 import { fDate } from "../../utils/formatTime";
 import { useApp } from "../../hooks/useApp";
 import { uploadAvatarApi } from "../../service/FileService";

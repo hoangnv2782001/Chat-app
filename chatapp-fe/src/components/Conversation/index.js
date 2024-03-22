@@ -7,7 +7,7 @@ import Message from "./Message";
 import { useTheme } from "@mui/material/styles";
 import useResponsive from "../../hooks/useResponsive";
 import { useSelector } from "react-redux";
-import { SimpleBarStyle } from "../Scrollbar";
+
 import HeaderGroup from "./HeaderGroup";
 /**
  * Convensation tao khung chat hôi thoai
@@ -57,9 +57,8 @@ const Convensation = () => {
           boxShadow: "0px 0px 2px rgba(0, 0, 0, 0.25)",
         }}
       >
-        <SimpleBarStyle timeout={500} clickOnTrack={false}>
-          <Message menu={true} isMobile={isMobile} />
-        </SimpleBarStyle>
+      
+          <Message menu={true} />
       </Box>
 
 

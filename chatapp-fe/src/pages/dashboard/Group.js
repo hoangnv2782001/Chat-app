@@ -17,6 +17,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Convensation from "../../components/Conversation";
 import useGroup from "../../hooks/useGroup.js";
 import { fetchCurrentMessages, selectConversation } from "../../Redux/slices/conversation.js";
+import Contact from "../../components/Contact.js";
 /**
  * Hiển thị khung chat group tương tự khung chat vs bạn
  * Gòm các thành phàn :
@@ -30,7 +31,7 @@ import { fetchCurrentMessages, selectConversation } from "../../Redux/slices/con
 const Group = () => {
   const theme = useTheme();
  
-
+  const { sidebar } = useSelector((state) => state.app);
   const { chatType,groups,current_conversation } = useSelector((state) => state.conversation);
   const { user } = useSelector((state) => state.app);
   const {subcribeChannels} = useGroup()
@@ -50,7 +51,7 @@ const Group = () => {
       <Box
         sx={{
           height: "100%",
-          width: "calc(100vw - 460px)",
+          width: sidebar.open ? "calc(100vw - 780px)" : "calc(100vw - 460px)",
           backgroundColor:
             theme.palette.mode === "light"
               ? "#F0F4FA"
@@ -73,6 +74,7 @@ const Group = () => {
           </Stack>
         )}
       </Box>
+       {sidebar.open && <Contact {...current_conversation}/>}
     </Stack>
   );
 };

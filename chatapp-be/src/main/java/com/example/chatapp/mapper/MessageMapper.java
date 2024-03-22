@@ -10,6 +10,7 @@ import com.example.chatapp.dto.request.MessageDto;
 import com.example.chatapp.dto.response.LastMessageResponse;
 import com.example.chatapp.dto.response.MessageResponse;
 import com.example.chatapp.dto.response.MessagesConversation;
+import com.example.chatapp.dto.response.UserResponse;
 import com.example.chatapp.model.Conversation;
 import com.example.chatapp.model.Group;
 import com.example.chatapp.model.GroupMessage;
@@ -52,18 +53,22 @@ public class MessageMapper implements MessageFactory {
 	@Override
 	public MessagesConversation mapToMessagesConversation(Message message) {
 		logger.info("log sender{}", message.getSender());
-
-		return MessagesConversation.builder().id(message.getId()).sender(message.getSender().getId())
+        
+		UserResponse userResponse = userMapper.map(message.getSender());
+		return MessagesConversation.builder().id(message.getId()).sender(userResponse)
 				.time(message.getCreateAt()).type(message.getType()).content(message.getContent()).build();
 
 	}
 
 	@Override
-	public LastMessageResponse map(LastMessage message) {
+	public LastMessageResponse map(LastMessage lastMessage) {
 		logger.info("last message group {}");
-		return LastMessageResponse.builder().content(message.getMessage().getContent()).seen(message.isSeen())
-				.type(message.getMessage().getType()).sender(message.getMessage().getSender().getId())
-				.time(message.getMessage().getCreateAt()).build();
+		
+		Message message = lastMessage.getMessage();
+		UserResponse userResponse = userMapper.map(message.getSender());
+		return LastMessageResponse.builder().content(message.getContent()).seen(lastMessage.isSeen())
+				.type(message.getType()).sender(userResponse)
+				.time(message.getCreateAt()).build();
 	}
 
 	@Override
@@ -71,9 +76,11 @@ public class MessageMapper implements MessageFactory {
 			
 //		
 	try {
-		return LastMessageResponse.builder().content(lasMessageGroup.getMessage().getContent()).seen(lasMessageGroup.isSeen())
-				.type(lasMessageGroup.getMessage().getType()).sender(lasMessageGroup.getMessage().getSender().getId())
-				.time(lasMessageGroup.getMessage().getCreateAt()).build();
+		Message message = lasMessageGroup.getMessage();
+		UserResponse userResponse = userMapper.map(message.getSender());
+		return LastMessageResponse.builder().content(message.getContent()).seen(lasMessageGroup.isSeen())
+				.type(message.getType()).sender(userResponse)
+				.time(message.getCreateAt()).build();
 	}catch (Exception e) {
 		// TODO: handle exception
 		logger.error("last message null");

@@ -1,4 +1,4 @@
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { socket } from "../Stomp";
 import {
   addMessages,
@@ -17,11 +17,9 @@ import {
   startConversationApi,
 } from "../service/ConversationsService";
 
-import {
-  ShowSnackbar,
 
-} from "../Redux/slices/app";
 import { uploadFileApi } from "../service/FileService";
+import { ShowSnackbar } from "../Redux/slices/app";
 
 export const useConversation = () => {
 
@@ -59,7 +57,7 @@ export const useConversation = () => {
       body: JSON.stringify(message),
     }); 
 
-    dispatch(addMessages({ message : {...message,sender: message.sender.id}  }));
+    dispatch(addMessages({ message }));
     dispatch(updateConversationThunk(message));
   };
 

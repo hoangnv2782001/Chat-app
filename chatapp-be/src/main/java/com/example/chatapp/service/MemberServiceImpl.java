@@ -14,13 +14,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class MemberServiceImpl implements MemberService{
 	private final MemberRepository memberRepository;
-	@Override
-	public void addMember(Member member) {
-		// TODO Auto-generated method stub
-		
-		memberRepository.save(member);
-		
-	}
 
 	@Override
 	public void addMembers(List<Member> members) {
