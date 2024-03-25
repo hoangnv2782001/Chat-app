@@ -234,11 +234,24 @@ export const addMessagesThunk = (message) => {
  */
 export const removeConversationThunk = (id) => {
   return async (dispatch, getState) => {
-    const { conversations } = getState().conversation;
+    const { conversations, current_conversation } = getState().conversation;
     const newConversations = conversations.filter((e) => {
       return e.id !== id;
     });
-    dispatch(selectConversation({ chatType: null }));
+    console.log("remove thunk ", current_conversation?.id, id);
+    if (current_conversation?.id === id) {
+      dispatch(selectConversation({ chatType: null, conversation: null }));
+    }
     dispatch(fetchConversations({ conversations: newConversations }));
+  };
+};
+
+export const updateGroupThunk = (id, getGroup) => {
+  return async (dispatch, getState) => {
+    const { current_conversation } = getState().conversation;
+
+    if (current_conversation?.id === id) {
+      getGroup(id);
+    }
   };
 };

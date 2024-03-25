@@ -23,7 +23,7 @@ const ChatElement = ({ id, user, lastMessage }) => {
 
   const { getMessages } = useConversation();
 
-  const {chatType} = useSelector(state=>state.conversation)
+  const { chatType } = useSelector((state) => state.conversation);
   return (
     // wrapper element
     <StyledChatBox
@@ -36,9 +36,14 @@ const ChatElement = ({ id, user, lastMessage }) => {
       p={0.5}
       // handle select conversation
       onClick={() => {
-        dispatch(selectConversation({ chatType: "private",conversation :{ id, user } }));
-      
-        getMessages("private",id);
+        dispatch(
+          selectConversation({
+            chatType: "private",
+            conversation: { id, user },
+          })
+        );
+
+        getMessages("private", id);
       }}
     >
       {/* Wrapper toàn bộ các nội dung hiển thị trong box chat */}
@@ -126,7 +131,6 @@ const ChatElement = ({ id, user, lastMessage }) => {
   );
 };
 
-
 const StyledChatBox = styled(Box)(({ theme }) => ({
   "&:hover": {
     cursor: "pointer",
@@ -143,6 +147,8 @@ export const getTypeMssage = (lastMessage) => {
       return <BrokenImageOutlinedIcon />;
     case "FILE":
       return <DescriptionOutlinedIcon />;
+    case "NOTIFICATION":
+      return lastMessage?.content;
     default:
       break;
   }

@@ -27,9 +27,8 @@ const Header = ({ id, name, img, online }) => {
   // khoi tao theme
   const theme = useTheme();
 
-  // khởi tao dispatch
-  const dispatch = useDispatch();
-  const {conversations,current_conversation} = useSelector(state => state.conversation)
+
+  const {current_conversation} = useSelector(state => state.conversation)
 
   const {deleteConversation} = useConversation()
 
@@ -43,7 +42,7 @@ const Header = ({ id, name, img, online }) => {
     setConversationMenuAnchorEl(null);
     console.log("delete conversation",current_conversation?.id)
     if(current_conversation?.id){
-      deleteConversation(current_conversation.id,conversations)
+      deleteConversation(current_conversation.id)
     }
   };
 

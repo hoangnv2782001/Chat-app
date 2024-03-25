@@ -94,9 +94,9 @@ export const useConversation = () => {
   const startConversation = async (user) => {
     try {
       const response = await startConversationApi(user?.id);
-
+      console.log("start conversation custom")
       if (response.status === 200) {
-        console.log("response conversation", response);
+        console.log("response start conversation", response);
         dispatch(
           selectConversation({
             chatType: "private",
@@ -107,10 +107,8 @@ export const useConversation = () => {
         getMessages(response.data);
       }
     } catch (err) {
+      console.log("err conversation", user,err);
       if (err.status === 404) {
-        console.log("err conversation", err);
-
-     
         dispatch(
           selectConversation({
             chatType: "private",
@@ -156,11 +154,11 @@ export const useConversation = () => {
     }
   };
 
-  const deleteConversation = async (id, conversations) => {
+  const deleteConversation = async (id) => {
     try {
       const response = await deleteConversationApi(id);
       if (response.status === 200) {
-        dispatch(setCurrentConversation(null));
+        // dispatch(setCurrentConversation(null));
 
         dispatch(removeConversationThunk(id));
         dispatch(

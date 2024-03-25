@@ -33,7 +33,7 @@ import { useConversation } from "../../hooks/useConversation";
 const Footer = () => {
   const theme = useTheme();
 
-  const dispatch = useDispatch();
+
 
   // const { current_conversation } = useSelector((state) => state.conversation);
   const {chatType,current_conversation} = useSelector(state=>state.conversation)

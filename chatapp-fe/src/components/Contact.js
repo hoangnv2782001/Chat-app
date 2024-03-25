@@ -35,8 +35,10 @@ const Contact = ({ id, name, avatar, members, admin }) => {
   const theme = useTheme();
   const dispatch = useDispatch();
 
-  const {user} = useSelector(state=>state.app)
-  const { removeMember } = useGroup();
+  const { user } = useSelector((state) => state.app);
+
+  const { current_conversation } = useSelector((state) => state.conversation);
+  const { leaveGroup,removeMember } = useGroup();
   const [openBlock, setOpenBlock] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
 
@@ -55,14 +57,15 @@ const Contact = ({ id, name, avatar, members, admin }) => {
   };
 
   const handleRemoveMember = (id) => {
-    removeMember(id);
+    removeMember(id,current_conversation?.id);
   };
 
-  const leaveGroup = ()=>{
-    const id = members.find(e => e.id === user.id).memberId
-    removeMember(id);
-    handleCloseDelete()
-  }
+  const handleLeaveGroup = () => {
+    const id = members.find((e) => e.id === user.id).memberId;
+   
+    leaveGroup(id,current_conversation?.id);
+    handleCloseDelete();
+  };
   return (
     <Box sx={{ width: 320, height: "100vh" }}>
       <Stack sx={{ height: "100%" }}>
@@ -120,24 +123,26 @@ const Contact = ({ id, name, avatar, members, admin }) => {
             </Stack>
           </Stack>
 
-          <Stack
-            direction="row"
-            justifyContent="space-evenly"
-            alignItems={"center"}
-          >
-            <Stack spacing={0.5} alignItems={"center"}>
-              <IconButton onClick={() => setOpenAddMember(true)}>
-                <GroupAddIcon />
-              </IconButton>
-              <Typography variant="overline">Add member</Typography>
+          {admin.id === user.id && (
+            <Stack
+              direction="row"
+              justifyContent="space-evenly"
+              alignItems={"center"}
+            >
+              <Stack spacing={0.5} alignItems={"center"}>
+                <IconButton onClick={() => setOpenAddMember(true)}>
+                  <GroupAddIcon />
+                </IconButton>
+                <Typography variant="overline">Add member</Typography>
+              </Stack>
+              <Stack spacing={0.5} alignItems={"center"}>
+                <IconButton>
+                  <Edit />
+                </IconButton>
+                <Typography variant="overline">Edit name</Typography>
+              </Stack>
             </Stack>
-            <Stack spacing={0.5} alignItems={"center"}>
-              <IconButton>
-                <Edit />
-              </IconButton>
-              <Typography variant="overline">Edit name</Typography>
-            </Stack>
-          </Stack>
+          )}
           <Divider />
 
           {/* group */}
@@ -201,7 +206,11 @@ const Contact = ({ id, name, avatar, members, admin }) => {
         <BlockDialog open={openBlock} handleClose={handleCloseBlock} />
       )}
       {openDelete && (
-        <DeleteDialog open={openDelete} handleClose={handleCloseDelete} leaveGroup={leaveGroup} />
+        <DeleteDialog
+          open={openDelete}
+          handleClose={handleCloseDelete}
+          leaveGroup={handleLeaveGroup}
+        />
       )}
 
       {openAddMember && (
@@ -218,7 +227,7 @@ const Contact = ({ id, name, avatar, members, admin }) => {
  * @callback {function} handleClose
  * @return {Component}
  */
-const DeleteDialog = ({ open, handleClose,leaveGroup }) => {
+const DeleteDialog = ({ open, handleClose, leaveGroup }) => {
   return (
     <Dialog
       open={open}
@@ -247,7 +256,7 @@ const DeleteDialog = ({ open, handleClose,leaveGroup }) => {
  * @callback {function} handleClose
  * @return {Component}
  */
-const  BlockDialog = ({ open, handleClose }) => {
+const BlockDialog = ({ open, handleClose }) => {
   return (
     <Dialog
       open={open}

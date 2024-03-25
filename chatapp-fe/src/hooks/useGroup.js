@@ -1,7 +1,9 @@
 import {
   addMembersApi,
   createGroupApi,
+  getGroupApi,
   getGroupsApi,
+  leaveGroupApi,
   removeMemberApi,
 } from "../service/GroupService";
 
@@ -13,14 +15,20 @@ import {
   addGroup,
   addMessagesThunk,
   appendMembers,
-  deleteMember,
   fetchGroups,
+  selectConversation,
+  setCurrentConversation,
   updateConversationThunk,
+  updateGroupThunk,
 } from "../Redux/slices/conversation";
+import { useState } from "react";
+import { togglesidebar } from "../Redux/slices/app";
 const useGroup = () => {
   const { showSnackbar } = useApp();
 
   const dispatch = useDispatch();
+
+  const [channelSubscribe, setChannelSubscribe] = useState([]);
   /**
    * create group
    * @param {*} data
@@ -48,7 +56,7 @@ const useGroup = () => {
   };
 
   /**
-   *
+   * get groups of user
    */
   const getGroups = async () => {
     try {
@@ -65,22 +73,54 @@ const useGroup = () => {
   };
 
   /**
+   * get group current
+   * @param {*} id
+   */
+  const getGroup = async (id) => {
+    try {
+      const response = await getGroupApi(id);
+
+      console.log("get group ", response);
+      if (response.status === 200) {
+        dispatch(setCurrentConversation(response.data));
+      }
+    } catch (err) {
+      showSnackbar({
+        severity: "error",
+        message: "Something went wrong!!",
+      });
+    }
+  };
+
+  /**
    * subcrobe channle group
    * @param {*} channels
    * @param {*} user
    */
-  const subcribeChannels = (channels, user) => {
-    channels.forEach((element) => {
-      socket.subscribe(element.channel, (message) => {
-        const data = JSON.parse(message.body);
-        console.log("receiver group message", data, data.sender.id === user);
+  const subcribeChannels = (groups, user) => {
+    channelSubscribe.forEach((e) => {
+      e.unsubscribe();
+    });
+    const channels = [];
 
-        if (data.sender.id !== user) {
+    console.log("log onconnect");
+    groups.forEach((element) => {
+      const channel = socket.subscribe(element.channel, (message) => {
+        const data = JSON.parse(message.body);
+
+        if (data.type === "NOTIFICATION") {
+          dispatch(updateGroupThunk(data.conversation, getGroup));
+        }
+
+        if (data.sender.id !== user || data.type === "NOTIFICATION") {
           dispatch(addMessagesThunk(data));
           dispatch(updateConversationThunk(data));
         }
       });
+      channels.push(channel);
     });
+
+    setChannelSubscribe(channels);
   };
 
   /**
@@ -93,7 +133,16 @@ const useGroup = () => {
       const response = await addMembersApi(groupId, members);
 
       if (response.status === 200) {
-        dispatch(appendMembers({ members }));
+        console.log("add member response ", response);
+
+        const newMembers = [];
+
+        const data = response.data;
+        members.forEach((e, i) => {
+          const obj = { ...e, memberId: data[i] };
+          newMembers.push(obj);
+        });
+        dispatch(appendMembers({ members: newMembers }));
         showSnackbar({
           severity: "success",
           message: "Add members successfully",
@@ -112,9 +161,9 @@ const useGroup = () => {
    * remove member
    * @param {*} id
    */
-  const removeMember = async (id) => {
+  const removeMember = async (id, groupId) => {
     try {
-      const response = await removeMemberApi(id);
+      const response = await removeMemberApi(id, groupId);
 
       if (response.status === 200) {
         // dispatch(deleteMember(id));
@@ -132,9 +181,43 @@ const useGroup = () => {
     }
   };
 
+  /**
+   * leave group
+   * @param {*} id
+   * @param {*} groupid
+   */
+  const leaveGroup = async (id, groupId) => {
+    try {
+      const response = await leaveGroupApi(id, groupId);
 
+      if (response.status === 200) {
+        // dispatch(deleteMember(id));
+        showSnackbar({
+          severity: "success",
+          message: "Leave group successfully",
+        });
 
-  return { createGroup, getGroups, subcribeChannels, addMembers, removeMember };
+        dispatch(selectConversation({ chatType: null, conversation: null }));
+        dispatch(togglesidebar());
+        getGroups();
+      }
+    } catch (err) {
+      console.log("leave group error ", err);
+      showSnackbar({
+        severity: "error",
+        message: "Laeve group fail",
+      });
+    }
+  };
+
+  return {
+    createGroup,
+    getGroups,
+    subcribeChannels,
+    addMembers,
+    removeMember,
+    leaveGroup,
+  };
 };
 
 export default useGroup;

@@ -20,7 +20,7 @@ import { fetchCurrentMessages, selectConversation } from "../../Redux/slices/con
 const GeneralApp = () => {
   const theme = useTheme();
 const dispatch = useDispatch()
-  const { sidebar } = useSelector((state) => state.app);
+ 
 
   const {chatType , current_conversation} = useSelector(state=>state.conversation)
 
@@ -36,7 +36,7 @@ const dispatch = useDispatch()
       <Box
         sx={{
           height: "100%",
-          width: sidebar.open ? "calc(100vw - 740px)" : "calc(100vw - 460px)",
+          width: "calc(100vw - 460px)",
           backgroundColor:
             theme.palette.mode === "light"
               ? "#F0F4FA"

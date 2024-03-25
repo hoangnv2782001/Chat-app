@@ -11,7 +11,7 @@ import { useApp } from "./useApp";
 export const useConversations = () => {
   const dispatch = useDispatch();
  
-  const {showSnackbar} = useApp()
+  // const {showSnackbar} = useApp()
 
   /**
    * get conversations of user

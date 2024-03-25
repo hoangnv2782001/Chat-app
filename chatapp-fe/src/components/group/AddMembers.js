@@ -81,7 +81,7 @@ const AddMembers = ({ open, handleClose }) => {
       </Stack>
       <DialogContent sx={{ p: 0, width: "100%", overflow: "hidden" }}>
         <Stack
-          sx={{ width: 400, overflow: "hidden", height: "100%", p: "0px 16px" }}
+          sx={{ width: 400, height: "100%", p: "0px 16px" }}
         >
           <Stack height={"100%"}>
             <TextField
@@ -155,7 +155,9 @@ const AddMembers = ({ open, handleClose }) => {
             </Stack>
           </Stack>
 
-          <Stack
+        </Stack>
+        
+        <Stack
             alignItems={"center"}
             justifyContent={"center"}
             sx={{ p: 2, height: "54px" }}
@@ -168,7 +170,6 @@ const AddMembers = ({ open, handleClose }) => {
               Add Members
             </Button>
           </Stack>
-        </Stack>
       </DialogContent>
     </Dialog>
   );

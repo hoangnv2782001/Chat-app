@@ -1,5 +1,5 @@
 package com.example.chatapp.common;
 
 public enum MessageType {
-    TEXT,LINK,FILE,IMAGE
+    TEXT,LINK,FILE,IMAGE,NOTIFICATION
 }

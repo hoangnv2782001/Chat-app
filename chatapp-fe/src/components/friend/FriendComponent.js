@@ -3,7 +3,6 @@ import { styled, useTheme } from "@mui/material/styles";
 import {
   Avatar,
   Box,
-  Button,
   IconButton,
   Stack,
   Typography,
@@ -11,7 +10,7 @@ import {
 import StyledBadge from "../StyledBadge";
 
 import { Chat } from "phosphor-react";
-import { useDispatch, useSelector } from "react-redux";
+
 
 import { useConversation } from "../../hooks/useConversation";
 const FriendComponent = ({ name, id, online, img, ...other }) => {
@@ -54,29 +53,14 @@ const FriendComponent = ({ name, id, online, img, ...other }) => {
         <Stack direction={"row"} spacing={2} alignItems={"center"}>
           <IconButton
             onClick={() => {
+
+              console.log("start conversation")
               startConversation({name,id,online,img})
 
-
-              //
-
               console.log("select conversation :", id);
-
-              // dispatch(AddDirectConversation())
               other.handleClose();
 
-              // dispatch(SelectConversation({ chatType:"private" }));
-
-              // dispatch(
-              //   CreateCurrentConversation({
-              //     id: null,
-              //     user: {
-              //       name,
-              //       id,
-              //       online,
-              //       img,
-              //     },
-              //   })
-              // );
+              
             }}
           >
             <Chat />

@@ -12,12 +12,10 @@ import { useConversation } from "../../hooks/useConversation";
 
 const GroupElement = ({ id, avatar, name, admin, members, lastMessage }) => {
   const dispatch = useDispatch();
-  
+
   const { getMessages } = useConversation();
 
   const { user } = useSelector((state) => state.app);
-
-
 
   return (
     // wrapper element
@@ -100,11 +98,19 @@ const GroupElement = ({ id, avatar, name, admin, members, lastMessage }) => {
                 color: "#7589a3",
                 fontWeight: "400",
                 fontSize: "14px",
+                maxWidth: "100%",
               }}
             >
               {lastMessage && (
                 <>
-                  {lastMessage.sender.id !== user.id ? `${lastMessage.sender.name}: ` : "You: "}
+                  {lastMessage.type !== "NOTIFICATION" && (
+                    <>
+                      {" "}
+                      {lastMessage.sender.id !== user.id
+                        ? `${lastMessage.sender.name}: `
+                        : "You: "}
+                    </>
+                  )}
                   {lastMessage && getTypeMssage(lastMessage)}
                 </>
               )}

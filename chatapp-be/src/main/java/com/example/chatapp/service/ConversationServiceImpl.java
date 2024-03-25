@@ -1,5 +1,6 @@
 package com.example.chatapp.service;
 
+import com.example.chatapp.common.Action;
 import com.example.chatapp.dto.request.MessageDto;
 import com.example.chatapp.dto.response.ConversationResponse;
 import com.example.chatapp.dto.response.MessageResponse;
@@ -37,8 +38,8 @@ public class ConversationServiceImpl implements ConversationService {
 	private final UserMapper userMapper;
 	private final UserService userService;
 	private final FriendService friendService;
-    private final NotificationService notificationService;
-    
+	private final NotificationService notificationService;
+
 	@Override
 	public String startConversation(User sender, int receiver) {
 
@@ -74,7 +75,7 @@ public class ConversationServiceImpl implements ConversationService {
 
 		User u = userService.findUser(receiver);
 
-		if(friendService.checkFriend(sender.getId(), receiver)) {
+		if (friendService.checkFriend(sender.getId(), receiver)) {
 			Conversation conversation = Conversation.builder().member1(sender).member2(u).build();
 			String id = conversationRepository.save(conversation).getId();
 			logger.info("create conversation {}", id);
@@ -84,18 +85,18 @@ public class ConversationServiceImpl implements ConversationService {
 	}
 
 	@Override
-	public void deleteConversation(int sender,String id) {
+	public void deleteConversation(int sender, String id) {
 		// TODO Auto-generated method stub
-		Conversation conversation = conversationRepository.findById(id).orElseThrow(()->{
+		Conversation conversation = conversationRepository.findById(id).orElseThrow(() -> {
 			throw new ResourceNotFoundException("Conversation not exits");
 		});
-		
-		int receiver = conversation.getMember1().getId() == sender ? conversation.getMember2().getId() : conversation.getMember1().getId();
+
+		int receiver = conversation.getMember1().getId() == sender ? conversation.getMember2().getId()
+				: conversation.getMember1().getId();
 		conversationRepository.delete(conversation);
-		
-		
-		notificationService.pushNotification(Notification.builder().data(id).receiver(receiver).build());
+
+		notificationService.pushNotification(
+				Notification.builder().data(id).action(Action.DELETE_CONVERSATION).receiver(receiver).build());
 	}
-	
 
 }

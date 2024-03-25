@@ -7,7 +7,6 @@ const initialState = {
   user: null,
   sidebar: {
     open: false,
-    type: "CONTACT",
   },
   snackbar: {
     open: null,

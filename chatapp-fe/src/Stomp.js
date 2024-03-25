@@ -21,6 +21,7 @@ const connectSocket = (token, onConnect) => {
   });
 
   
+  
 
   if (typeof WebSocket !== "function") {
     // For SockJS you need to set a factory that creates a new SockJS instance

@@ -17,6 +17,10 @@ export const Member = ({avatar, img, name, id, memberId, removeMember }) => {
     (state) => state.conversation.current_conversation
   );
 
+  const { user } = useSelector(
+    (state) => state.app
+  );
+
   return (
     <Stack
       direction={"row"}
@@ -40,7 +44,7 @@ export const Member = ({avatar, img, name, id, memberId, removeMember }) => {
           {admin.id === id && <Typography>Admin</Typography>}
         </Stack>
       </Stack>
-      {admin.id !== id && (
+      {admin.id !== id && admin.id === user.id && (
         <IconButton onClick={handleClick}>
           {" "}
           <GroupRemoveIcon />

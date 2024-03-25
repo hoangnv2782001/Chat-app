@@ -1,12 +1,5 @@
-import {
-  Box,
-
-  Stack,
-  Typography,
-} from "@mui/material";
+import { Box, Stack, Typography } from "@mui/material";
 import React, { useEffect } from "react";
-
-
 
 import { useTheme } from "@mui/material/styles";
 
@@ -16,8 +9,12 @@ import GroupChat from "../../components/group/GroupChat.js";
 import { useDispatch, useSelector } from "react-redux";
 import Convensation from "../../components/Conversation";
 import useGroup from "../../hooks/useGroup.js";
-import { fetchCurrentMessages, selectConversation } from "../../Redux/slices/conversation.js";
+import {
+  fetchCurrentMessages,
+  selectConversation,
+} from "../../Redux/slices/conversation.js";
 import Contact from "../../components/Contact.js";
+import { socket } from "../../Stomp.js";
 /**
  * Hiển thị khung chat group tương tự khung chat vs bạn
  * Gòm các thành phàn :
@@ -30,18 +27,26 @@ import Contact from "../../components/Contact.js";
  */
 const Group = () => {
   const theme = useTheme();
- 
+
   const { sidebar } = useSelector((state) => state.app);
-  const { chatType,groups,current_conversation } = useSelector((state) => state.conversation);
+  const { chatType, groups, current_conversation } = useSelector(
+    (state) => state.conversation
+  );
   const { user } = useSelector((state) => state.app);
-  const {subcribeChannels} = useGroup()
+  const { subcribeChannels } = useGroup();
   const dispatch = useDispatch();
 
-  useEffect(()=>{
+  useEffect(() => {
     dispatch(fetchCurrentMessages({ messages: [] }));
-    dispatch(selectConversation({ chatType: "group" ,conversation : null}));
-    subcribeChannels(groups,user?.id)
-  },[])
+    dispatch(selectConversation({ chatType: "group", conversation: null }));
+  }, []);
+
+  useEffect(() => {
+    console.log("subcrice channel");
+    if (socket.connected) {
+      subcribeChannels(groups, user?.id);
+    }
+  }, [groups.length, socket.connected]);
 
   return (
     <Stack direction={"row"} sx={{ width: "100%" }}>
@@ -74,7 +79,9 @@ const Group = () => {
           </Stack>
         )}
       </Box>
-       {sidebar.open && <Contact {...current_conversation}/>}
+      {sidebar.open && current_conversation && (
+        <Contact {...current_conversation} />
+      )}
     </Stack>
   );
 };

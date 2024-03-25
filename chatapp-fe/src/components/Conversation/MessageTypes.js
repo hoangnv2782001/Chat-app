@@ -21,16 +21,17 @@ import { fDateTime } from "../../utils/formatTime";
  * @param {Object} message
  * @returns {Component}
  */
-export const TimeLine = ({ message, id }) => {
+export const Notification = ({ message }) => {
   const theme = useTheme();
 
   return (
-    <Stack direction="row" alignItems={"center"} justifyContent="space-between">
-      <Divider width="40%" />
-      <Typography variant="caption" sx={{ color: theme.palette.text }}>
+    <Stack direction="row" alignItems={"center"} justifyContent="center">
+      <Typography
+        variant="body2"
+        sx={{ color: theme.palette.text, fontWeight: 300 }}
+      >
         {message.content}
       </Typography>
-      <Divider width="40%" />
     </Stack>
   );
 };

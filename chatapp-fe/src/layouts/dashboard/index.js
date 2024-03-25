@@ -15,6 +15,7 @@ import {
 
   addMessagesThunk,
   removeConversationThunk,
+  setCurrentConversation,
   updateConversationThunk,
 
 } from "../../Redux/slices/conversation";
@@ -76,12 +77,23 @@ const DashboardLayout = () => {
 
         socket.subscribe("/user/queue/message", handleReceiveMessage);
 
-        socket.subscribe("/user/queue/conversation/delete", (message) => {
-          console.log(`du lieu nhan delete conversation ${message.body}`);
+        socket.subscribe("/user/queue/notification", (message) => {
+        
 
           const data = JSON.parse(message.body);
+          console.log(`du lieu nhan delete conversation `,data);
+          if(data.action === 'DELETE_CONVERSATION'){
 
-          dispatch(removeConversationThunk(data.data));
+            console.log("delete conversation")
+            dispatch(removeConversationThunk(data.data));
+           
+          } else if(data.action === 'ADD_GROUP' || 'REMOVE_GROUP'){
+
+            if(current_conversation?.id === data.data){
+              dispatch(setCurrentConversation({chatType : null,conversation : null}))
+            }
+            getGroups();
+          }
         });
       };
       if (!socket) {
@@ -105,7 +117,7 @@ const DashboardLayout = () => {
     getFriends();
     getGroups()
    
-  }, [isLoggedIn]);
+  },[]);
 
   // jsx render ra component navbar
   return (
