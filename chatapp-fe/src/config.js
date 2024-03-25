@@ -4,9 +4,9 @@ import { enUS, frFR, zhCN, viVN, arSD } from "@mui/material/locale";
 // routes
 import { PATH_DASHBOARD } from "./routes/paths";
 
-export const BASE_URL = "http://localhost:8000/api/v1";
+export const BASE_URL = process.env.BASE_URL || "http://localhost:8000/api/v1";
 
-export const WEBSOCKET_URL = "ws://localhost:8000/ws";
+export const WEBSOCKET_URL =  process.env.WEBSOCKET_URL || "ws://localhost:8000/ws";
 
 /**
  * Setting theme:

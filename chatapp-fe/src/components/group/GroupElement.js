@@ -15,6 +15,8 @@ const GroupElement = ({ id, avatar, name, admin, members, lastMessage }) => {
 
   const { getMessages } = useConversation();
 
+  const { getGroup } = useGroup();
+
   const { user } = useSelector((state) => state.app);
 
   return (
@@ -35,7 +37,7 @@ const GroupElement = ({ id, avatar, name, admin, members, lastMessage }) => {
             conversation: { id, avatar, name, admin, members, lastMessage },
           })
         );
-
+        getGroup(id)
         getMessages("group", id);
       }}
     >

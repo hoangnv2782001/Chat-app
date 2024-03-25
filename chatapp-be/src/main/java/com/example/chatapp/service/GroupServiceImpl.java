@@ -61,6 +61,7 @@ public class GroupServiceImpl implements GroupService {
 		Group group = Group.builder().avatar(groupDto.getAvatar()).name(groupDto.getName()).build();
 
 		final Group group2 = groupRepository.save(group);
+		String groupId = group2.getId();
 		List<Member> members = groupDto.getMembers().stream()
 				.map(t -> Member.builder().group(group2).user(User.builder().id(t.getId()).build()).build())
 				.collect(Collectors.toList());
@@ -84,6 +85,14 @@ public class GroupServiceImpl implements GroupService {
 		groupResponse.setMembers(memberResponses);
 		groupResponse.setLastMessage(lastMessageResponse);
 
+		// push notification to member groups
+		
+				String name = group2.getAdmin().getName();
+				MessageDto messageDto = MessageDto.builder().content(name +" created the group")
+						.conversation(groupId).receiver(groupId).type(MessageType.NOTIFICATION).sender(userMapper.map(group2.getAdmin()))
+						.time(DateUtils.convertToUtc(LocalDateTime.now())).build();
+				// send message noti
+				chatService.sendMessageToGroup(messageDto);
 		// push notification
 		logger.info("members {}", groupDto);
 		for (MemberDto m : groupDto.getMembers()) {
@@ -91,7 +100,9 @@ public class GroupServiceImpl implements GroupService {
 					.data(groupResponse).build();
 			notificationService.pushNotification(notification);
 		}
-		return group2.getId();
+		
+		
+		return groupId;
 
 	}
 

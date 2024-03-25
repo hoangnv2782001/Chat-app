@@ -48,7 +48,7 @@ public class AuthController {
 
 	private final AuthService authService;
 
-	private static final Logger logger = LoggerFactory.getLogger(FriendController.class);
+	private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
 
 	/**
 	 * Controller receive request login and response token jwt

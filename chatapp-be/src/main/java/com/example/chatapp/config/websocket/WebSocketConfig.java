@@ -1,9 +1,13 @@
 package com.example.chatapp.config.websocket;
 
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
+import org.springframework.scheduling.TaskScheduler;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
@@ -35,6 +39,13 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 	public WebSocketConfig(@Qualifier("httpHandshakeHandle") DefaultHandshakeHandler handshakeHandler) {
 		this.handshakeHandler = handshakeHandler;
 	}
+	
+	private TaskScheduler messageBrokerTaskScheduler;
+
+	@Autowired
+	public void setMessageBrokerTaskScheduler(@Lazy TaskScheduler taskScheduler) {
+		this.messageBrokerTaskScheduler = taskScheduler;
+	}
 
 	@Override
 	public void registerStompEndpoints(StompEndpointRegistry registry) {
@@ -50,7 +61,10 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 	@Override
 	public void configureMessageBroker(MessageBrokerRegistry config) {
 		config.setApplicationDestinationPrefixes("/app"); 
-		config.enableSimpleBroker("/topic", "/queue");
-//		.setHeartbeatValue(new long[] {6000,6000});
+		config.enableSimpleBroker("/topic", "/queue")
+		.setHeartbeatValue(new long[] {30000,30000})
+		.setTaskScheduler(messageBrokerTaskScheduler)
+		;
+		
 		config.setUserDestinationPrefix("/user");	}
 }

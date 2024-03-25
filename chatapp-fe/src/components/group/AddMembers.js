@@ -83,7 +83,7 @@ const AddMembers = ({ open, handleClose }) => {
         <Stack
           sx={{ width: 400, height: "100%", p: "0px 16px" }}
         >
-          <Stack height={"100%"}>
+          {/* <Stack height={"100%"}>
             <TextField
               id="search-bar"
               className="text"
@@ -105,7 +105,7 @@ const AddMembers = ({ open, handleClose }) => {
                 ),
               }}
             />
-          </Stack>
+          </Stack> */}
 
           <Stack
             alignItems={"center"}

@@ -217,6 +217,7 @@ const useGroup = () => {
     addMembers,
     removeMember,
     leaveGroup,
+    getGroup
   };
 };
 

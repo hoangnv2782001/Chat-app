@@ -103,7 +103,7 @@ const CreateGroupForm = ({ handleClose }) => {
   const { showSnackbar, updateAvatar } = useApp();
   const [loadingAvatar, setLoadingAvatar] = useState(false);
 
-  const [avatar, setAvatar] = useState("null");
+  const [avatar, setAvatar] = useState();
 
   /**
    * upload avatar
