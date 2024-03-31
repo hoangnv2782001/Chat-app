@@ -1,6 +1,5 @@
 package com.example.chatapp.config.websocket;
 
-import com.example.chatapp.config.security.JwtAuthenticationFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

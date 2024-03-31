@@ -24,8 +24,6 @@ public class WebSocketEventListener {
 	private final PresentService presentService;
 	
 
-//    private static int  a = 1;
-
 	private final SimpMessageSendingOperations messagingTemplate;
 
 	/**
@@ -36,34 +34,45 @@ public class WebSocketEventListener {
 	@EventListener
 	public void handleWebSocketConnectListener(SessionConnectedEvent event) {
 
-		logger.info("Received a new web socket connection {} ", event.getUser());
+		logger.info("Received a new web socket connection ");
 
 		try {
 			int id = Integer.parseInt(event.getUser().getName());
 			presentService.updateStatus(id, true);
 			
-
 		} catch (Exception ex) {
 			logger.error("handle connect socket erorr {}{}", ex.getMessage(),ex);
 		}
 
 	}
 	
-
+//
 	@EventListener
-	public void handleWebSocketDisconnectListener(SessionDisconnectEvent event) {
-		logger.info("Received a  web socket disconnection {} ", event.getUser());
+	public void handleWebSocketDisconnectListener(UserDisconnectEvent event) {
 		
-		
-
 		try {
-			int id = Integer.parseInt(event.getUser().getName());
-			presentService.updateStatus(id, false);
+			logger.info("Received a  web socket disconnection {} ", event.getId());
+			int id = event.getId();
+			presentService.updateStatusToDb(id, false);
 			
-
 		} catch (Exception ex) {
 			logger.error("handle disconnectconnect socket erorr {}", ex.getMessage());
 		}
 
 	}
+	@EventListener
+	public void handleWebSocketReConnectListener(UserReconnectEvent event) {
+		
+		try {
+			logger.info("Received a  web socket re connect ");
+			int id = event.getId();
+			presentService.updateStatusToDb(id, true);
+			
+		} catch (Exception ex) {
+			logger.error("handle disconnectconnect socket erorr {}", ex.getMessage());
+		}
+
+	}
+	
+	
 }

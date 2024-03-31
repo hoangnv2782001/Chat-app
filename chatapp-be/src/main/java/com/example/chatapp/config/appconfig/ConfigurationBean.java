@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
+import org.springframework.data.redis.serializer.JdkSerializationRedisSerializer;
+import org.springframework.data.redis.serializer.RedisSerializer;
 
 import com.cloudinary.Cloudinary;
 
@@ -46,4 +48,9 @@ public class ConfigurationBean {
 		return new Cloudinary(config);
 	}
 
+	
+	@Bean
+	RedisSerializer serializer() {
+		return new JdkSerializationRedisSerializer();
+	}
 }

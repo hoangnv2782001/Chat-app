@@ -39,11 +39,11 @@ import lombok.RequiredArgsConstructor;
 @EnableWebSecurity
 public class SecurityConfiguration {
 
-	private final UserRepository userRepository;
+	
 	private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
 	private final UserDetailsService userDetailsService;
-	private final FilterChainExceptionHandler filterChainExceptionHandler;
+
 
 
 

@@ -13,7 +13,7 @@ public class Constants {
 	
 	public final static String  MAKE_FRIEND_DESTINATION = "/queue/friend";
 	
-	public final static long HEARTBEAT = 60000;
+	public final static long HEARTBEAT = 30000;
 	
 
 }
