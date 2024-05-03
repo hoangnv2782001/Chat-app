@@ -11,6 +11,10 @@ import com.example.chatapp.model.User;
 @Configuration
 public class JpaConfig {
 
+	/**
+	 * 
+	 * @return
+	 */
 	@Bean
 	public AuditorAware<User> auditorAware() {
 		return new AuditorAwareImpl();

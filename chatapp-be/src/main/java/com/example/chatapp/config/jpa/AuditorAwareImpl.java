@@ -14,6 +14,9 @@ import com.example.chatapp.service.AuthServiceImpl;
 public class AuditorAwareImpl implements AuditorAware<User> {
 	private static final Logger logger = LoggerFactory.getLogger(AuditorAwareImpl.class);
 
+	/**
+	 * 
+	 */
 	public Optional<User> getCurrentAuditor() {
 
 		try {
